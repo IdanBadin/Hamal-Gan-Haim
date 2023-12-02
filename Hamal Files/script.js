@@ -39,9 +39,9 @@ function displayTables() {
               <tr>
                 <th colspan="3" id="tableHeaderElement">
                   <div id="tableHeaderContainer" style="position: relative">
-                    <div id="calendarIconDiv"><img style="width: 30px;height: 30px" src="../Images/calendar.png" alt="calendar""></div>
+                    <div id="calendarIconDiv"><img style="width: 30px;height: 30px" src="./Images/calendar.png" alt="calendar""></div>
                     <div id="tableTitleTextDiv">${table.title}</div>
-                    <div id="deleteTableBtnDiv"><img class="deleteTableBtn" src="../Images/delete.png" alt="Delete Button" onclick="deleteTable('${table.id}', ${index})"></div>
+                    <div id="deleteTableBtnDiv"><img class="deleteTableBtn" src="./Images/delete.png" alt="Delete Button" onclick="deleteTable('${table.id}', ${index})"></div>
                   </div>
                 </th>
               </tr>

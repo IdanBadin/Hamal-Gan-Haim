@@ -177,18 +177,24 @@ function makeTablesEditable() {
               clearTimeout(debounceTimer);
 
               if (tapCount === 5 || this.innerHTML.trim() === '') {
-                  this.contentEditable = "true";
-                  this.focus();
+                  if (cellIndex % 3 === 1) {
+                      // If the clicked cell is in the second column, show a list of people's names
+                      showPeopleList(cell, tableIndex, cellIndex);
+                  } else {
+                      this.contentEditable = "true";
+                      this.focus();
 
-                  this.addEventListener('keydown', (e) => {
-                      if (e.key === 'Enter') {
-                          e.preventDefault(); // Prevent default behavior of Enter key
-                          this.contentEditable = "false";
-                          handleCellEdit(this);
-                          tapCount = 0; // Reset the tap count for the specific cell after successfully editing
-                      }
-                  });
+                      this.addEventListener('keydown', (e) => {
+                          if (e.key === 'Enter') {
+                              e.preventDefault(); // Prevent default behavior of Enter key
+                              this.contentEditable = "false";
+                              handleCellEdit(this);
+                              tapCount = 0; // Reset the tap count for the specific cell after successfully editing
+                          }
+                      });
+                  }
               }
+
               if (this.innerHTML.trim() !== '') {
                   tapCount++;
                   if (tapCount === 5) {
@@ -210,6 +216,87 @@ function makeTablesEditable() {
     editedData = (editedData === '<br>' || editedData === '<br/>') ? '' : editedData;
     cell.innerHTML = editedData;
     saveToFirestore();
+  }
+
+  // Function to show a list of people's names and handle selection
+  function showPeopleList(cell, tableIndex, cellIndex) {
+    const peopleList = [
+      "" ,'Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Miller', 'Emma Davis',
+      'Frank Wilson', 'Grace Moore', 'Henry Lee', 'Ivy Robinson', 'Jack Thompson',
+      'Katie White', 'Leo Harris', 'Mia Taylor', 'Noah Allen', 'Olivia Turner',
+      'Paul Clark', 'Quinn Adams', 'Rachel Wright', 'Samuel Young', 'Taylor King',
+      'Uma Green', 'Victor Hall', 'Wendy Walker', 'Xander Baker', 'Yara Cooper',
+      'Zachary Hill', 'Ava Robinson', 'Benjamin Moore', 'Chloe Turner'
+    ];
+
+    const listContainer = document.createElement('div');
+    listContainer.className = 'people-list-container';
+
+    // Adjust the styling for the list container
+    listContainer.style.backgroundColor = 'whitesmoke';
+    listContainer.style.border = '1px solid black';
+    listContainer.style.padding = '10px';
+    listContainer.style.borderRadius = '5px';
+    listContainer.style.width = '200px'; // Set the width to a smaller value
+    listContainer.style.maxHeight = '300px'; // Set a fixed height for the container
+    listContainer.style.overflowY = 'auto'; // Enable vertical scrolling
+
+    // Create a list of buttons for each person
+    peopleList.forEach(person => {
+      const button = document.createElement('button');
+      button.textContent = person;
+
+      // Adjust the styling for each button
+      button.style.width = '100%';
+      button.style.padding = '8px';
+      button.style.marginBottom = '8px'; // Add margin to separate buttons
+      button.style.border = 'none';
+      button.style.borderRadius = '3px';
+      button.style.cursor = 'pointer';
+      button.style.fontSize = '14px'; // Adjust the font size
+
+      button.addEventListener('click', () => {
+        cell.innerHTML = person;
+        listContainer.parentNode.removeChild(listContainer);
+        saveToFirestore();
+      });
+
+      listContainer.appendChild(button);
+    });
+
+    // Position the list container below the clicked cell
+    const rect = cell.getBoundingClientRect();
+    listContainer.style.position = 'absolute';
+    listContainer.style.top = rect.bottom + 'px';
+    listContainer.style.left = rect.left + 'px';
+
+    // Add the list container to the body
+    document.body.appendChild(listContainer);
+
+    // Close the list container when clicking outside
+    document.addEventListener('click', handleDocumentClick);
+
+    // Close the list container when scrolling anywhere on the website
+    window.addEventListener('wheel', handleWebsiteScroll);
+
+    // Function to handle clicks outside the list container
+    function handleDocumentClick(event) {
+      if (listContainer && listContainer.parentNode && !listContainer.contains(event.target) && event.target !== cell) {
+        listContainer.parentNode.removeChild(listContainer);
+        document.removeEventListener('click', handleDocumentClick);
+        window.removeEventListener('wheel', handleWebsiteScroll); // Remove the website scroll event listener
+      }
+    }
+
+    // Function to handle scrolling anywhere on the website
+    function handleWebsiteScroll() {
+      if (listContainer && listContainer.parentNode) {
+        listContainer.parentNode.removeChild(listContainer);
+      }
+    
+      document.removeEventListener('click', handleDocumentClick);
+      window.removeEventListener('wheel', handleWebsiteScroll);
+    }
   }
 }
 

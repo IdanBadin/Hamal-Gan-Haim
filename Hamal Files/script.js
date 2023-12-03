@@ -206,6 +206,11 @@ function makeTablesEditable() {
       saveToFirestore();
   }
 }
+
+document.addEventListener('touchstart', function () {
+  // Save the data to Firestore
+  saveToFirestore();
+});
   
 // Call makeTablesEditable when the DOM content is fully loaded
 document.addEventListener('DOMContentLoaded', async function () {

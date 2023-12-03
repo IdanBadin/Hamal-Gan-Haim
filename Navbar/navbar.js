@@ -20,11 +20,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Insert the navigation bar HTML into the body
     document.body.insertAdjacentHTML('afterbegin', navbarHtml);
 
-    // Apply initial styles with a short delay
-    setTimeout(function () {
-        applyInitialStyles();
-        applyTransitionEffect();
-    }, 1000); // Adjust the delay as needed
+    // Apply initial styles immediately
+    applyInitialStyles();
+
+    // Apply transition effect immediately
+    applyTransitionEffect();
 });
 
 // Function to apply initial styles

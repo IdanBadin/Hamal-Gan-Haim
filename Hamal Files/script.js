@@ -201,9 +201,8 @@ function makeTablesEditable() {
 
   // Function to handle cell edit (separate from the keydown event)
   function handleCellEdit(cell) {
-    let editedData = cell.innerText.trim();
-    editedData = (editedData === '<br>') ? '' : editedData;
-    cell.innerText = editedData;
+    const editedData = cell.textContent.trim();
+    cell.innerHTML = editedData;
     saveToFirestore();
   }
 }
@@ -311,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Scroll after a short delay to allow time for the tables to load
-  setTimeout(scrollToAnchor, 1500); // Adjust the delay as needed
+  setTimeout(scrollToAnchor, 2000); // Adjust the delay as needed
 });
 
 function getCurrentHebrewDate() {

@@ -201,7 +201,8 @@ function makeTablesEditable() {
 
   // Function to handle cell edit (separate from the keydown event)
   function handleCellEdit(cell) {
-    const editedData = cell.textContent.trim();
+    let editedData = cell.innerHTML.trim();
+    editedData = (editedData === '<br>' || editedData === '<br/>') ? '' : editedData;
     cell.innerHTML = editedData;
     saveToFirestore();
   }

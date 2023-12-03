@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.insertAdjacentHTML('afterbegin', navbarHtml);
 
     // Apply initial styles with a short delay
-    object.onload = function(){    setTimeout(function () {
+    setTimeout(function () {
         const currentPage = window.location.href;
 
         // Update the active button based on the current page
@@ -34,5 +34,4 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }, 1000); // Adjust the delay as needed
-    }
 });

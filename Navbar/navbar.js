@@ -20,36 +20,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // Insert the navigation bar HTML into the body
     document.body.insertAdjacentHTML('afterbegin', navbarHtml);
 
-    // Apply initial styles immediately
-    applyInitialStyles();
+    // Apply initial styles with a short delay
+    setTimeout(function () {
+        const currentPage = window.location.href;
 
-    // Apply transition effect immediately
-    applyTransitionEffect();
+        // Update the active button based on the current page
+        const navbarButtons = document.querySelectorAll('.navbar-button');
+        navbarButtons.forEach(button => {
+            const buttonLink = button.querySelector('a').href;
+            if (currentPage.includes(buttonLink)) {
+                button.classList.add('active');
+                button.querySelector('.highlight').style.width = '100%';
+            }
+        });
+    }, 1000); // Adjust the delay as needed
 });
-
-// Function to apply initial styles
-function applyInitialStyles() {
-    const currentPage = window.location.href;
-
-    // Update the active button based on the current page
-    const navbarButtons = document.querySelectorAll('.navbar-button');
-    navbarButtons.forEach(button => {
-        const buttonLink = button.querySelector('a').href;
-        if (currentPage.includes(buttonLink)) {
-            button.classList.add('active');
-        }
-    });
-}
-
-// Function to apply transition effect
-function applyTransitionEffect() {
-    const currentPage = window.location.href;
-    const navbarButtons = document.querySelectorAll('.navbar-button');
-
-    navbarButtons.forEach(button => {
-        const buttonLink = button.querySelector('a').href;
-        if (currentPage.includes(buttonLink)) {
-            button.querySelector('.highlight').style.width = '100%';
-        }
-    });
-}

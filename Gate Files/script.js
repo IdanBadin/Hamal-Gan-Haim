@@ -290,22 +290,25 @@ function getCurrentDateFormatted() {
 }
 
 // Function to scroll to current date table on website
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', function () {
   var currentDate = getCurrentDateFormatted();
   console.log("The current date is: " + currentDate);
 
-  var anchor = document.getElementById(currentDate);
+  // Introduce a delay (e.g., 1500 milliseconds) to wait for the tables to load
+  setTimeout(function () {
+    var anchor = document.getElementById(currentDate);
 
-  if (anchor) {
-    if ('scrollBehavior' in document.documentElement.style) {
-      anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (anchor) {
+      if ('scrollBehavior' in document.documentElement.style) {
+        anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        anchor.scrollIntoView(true);
+      }
     } else {
-      anchor.scrollIntoView(true);
+      console.log("Element with ID " + currentDate + " not found.");
     }
-  } else {
-    console.log("Element with ID " + currentDate + " not found.");
-  }
-};
+  }, 1500); // Adjust the delay as needed
+});
 
 function getCurrentHebrewDate() {
   const daysOfWeekHebrew = [

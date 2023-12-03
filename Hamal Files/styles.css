@@ -152,7 +152,7 @@ table {
     width: 100%;
     height: 4px;
     border-radius: 10px;
-    background-color: pink;; /* Replace with your desired color */
+    background-color: #6499E9;
 }
 
 .navbar-button {
@@ -166,6 +166,6 @@ table {
     left: 0;
     width: 0;
     height: 4px;
-    background-color: pink; /* Replace with your default color */
+    background-color: #6499E9;
     transition: width 0.3s ease 0.5s; /* Add a small delay for the initial width */
 }

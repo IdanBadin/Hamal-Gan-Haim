@@ -294,8 +294,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var currentDate = getCurrentDateFormatted();
   console.log("The current date is: " + currentDate);
 
-  // Introduce a delay (e.g., 1500 milliseconds) to wait for the tables to load
-  setTimeout(function () {
+  // Function to scroll to the anchor
+  function scrollToAnchor() {
     var anchor = document.getElementById(currentDate);
 
     if (anchor) {
@@ -307,7 +307,10 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
       console.log("Element with ID " + currentDate + " not found.");
     }
-  }, 1500); // Adjust the delay as needed
+  }
+
+  // Scroll after a short delay to allow time for the tables to load
+  setTimeout(scrollToAnchor, 1500); // Adjust the delay as needed
 });
 
 function getCurrentHebrewDate() {

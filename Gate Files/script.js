@@ -162,52 +162,52 @@ function makeTablesEditable() {
   const tables = document.querySelectorAll('.editableTable');
 
   tables.forEach((table, tableIndex) => {
-      const cells = table.getElementsByTagName('td');
-      Array.from(cells).forEach((cell, cellIndex) => {
-          let tapCount = 0;
-          let debounceTimer;
+    const cells = table.getElementsByTagName('td');
+    Array.from(cells).forEach((cell, cellIndex) => {
+      let tapCount = 0;
+      let debounceTimer;
 
-          cell.setAttribute('id', `cell${tableIndex + 1}_${cellIndex + 1}`);
+      cell.setAttribute('id', `cell${tableIndex + 1}_${cellIndex + 1}`);
 
-          cell.addEventListener('mousedown', function (event) {
-              event.preventDefault(); // Prevent default behavior to avoid selection of text
-          });
-
-          cell.addEventListener('click', function () {
-              clearTimeout(debounceTimer);
-
-              if (tapCount === 5 || this.innerHTML.trim() === '') {
-                  if (cellIndex % 3 === 1) {
-                      // If the clicked cell is in the second column, show a list of people's names
-                      showPeopleList(cell, tableIndex, cellIndex);
-                  } else {
-                      this.contentEditable = "true";
-                      this.focus();
-
-                      this.addEventListener('keydown', (e) => {
-                          if (e.key === 'Enter') {
-                              e.preventDefault(); // Prevent default behavior of Enter key
-                              this.contentEditable = "false";
-                              handleCellEdit(this);
-                              tapCount = 0; // Reset the tap count for the specific cell after successfully editing
-                          }
-                      });
-                  }
-              }
-
-              if (this.innerHTML.trim() !== '') {
-                  tapCount++;
-                  if (tapCount === 5) {
-                      this.style.border = "1px solid black";
-                  }
-
-                  // Reset the tap count after a short delay (e.g., 1 second)
-                  debounceTimer = setTimeout(() => {
-                      tapCount = 0;
-                  }, 1000);
-              }
-          });
+      cell.addEventListener('mousedown', function (event) {
+        event.preventDefault(); // Prevent default behavior to avoid selection of text
       });
+
+      cell.addEventListener('click', function () {
+        clearTimeout(debounceTimer);
+
+        if (tapCount === 5 || this.innerHTML.trim() === '') {
+          if (cellIndex % 3 === 1) {
+            // If the clicked cell is in the second column, show a list of people's names
+            showPeopleList(cell, tableIndex, cellIndex);
+          } else {
+            this.contentEditable = "true";
+            this.focus();
+
+            this.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent default behavior of Enter key
+                this.contentEditable = "false";
+                handleCellEdit(this);
+                tapCount = 0; // Reset the tap count for the specific cell after successfully editing
+              }
+            });
+          }
+        }
+
+        if (this.innerHTML.trim() !== '') {
+          tapCount++;
+          if (tapCount === 5) {
+            this.style.border = "1px solid black";
+          }
+
+          // Reset the tap count after a short delay (e.g., 1 second)
+          debounceTimer = setTimeout(() => {
+            tapCount = 0;
+          }, 1000);
+        }
+      });
+    });
   });
 
   // Function to handle cell edit (separate from the keydown event)
@@ -221,12 +221,12 @@ function makeTablesEditable() {
   // Function to show a list of people's names and handle selection
   function showPeopleList(cell, tableIndex, cellIndex) {
     const peopleList = [
-      "" ,'Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Miller', 'Emma Davis',
-      'Frank Wilson', 'Grace Moore', 'Henry Lee', 'Ivy Robinson', 'Jack Thompson',
-      'Katie White', 'Leo Harris', 'Mia Taylor', 'Noah Allen', 'Olivia Turner',
-      'Paul Clark', 'Quinn Adams', 'Rachel Wright', 'Samuel Young', 'Taylor King',
-      'Uma Green', 'Victor Hall', 'Wendy Walker', 'Xander Baker', 'Yara Cooper',
-      'Zachary Hill', 'Ava Robinson', 'Benjamin Moore', 'Chloe Turner'
+      "", 'גיא בלום', 'אילן כץ', 'עופר גובר', 'רז גרוסמן', 'שלומי טבת',
+      'יוסי שמר', 'יהודה אשכנזי', 'בועז פאר', 'יוסי סופר', 'רוני מרץ',
+      'גל פאר', 'רן ראובני', 'ערן אבנון', 'אלון מאור', 'מושיק ברזילי',
+      'אלי דפס', 'דני להב', 'ערן אבידור', 'עמוס קורן', 'נבות מרזל',
+      'משה שרביט', 'אתגר מרדכי', 'אמיר אבידור', 'יובל קרנר', 'זיו ליטמן',
+      'אורן טאוב', 'דורון אבן', 'עמית קליינמן', 'ישראל שדה', 'עופר מורשטיין', 'אבי חן', 'אייל וייסבורד', 'ישראל חן'
     ];
 
     const listContainer = document.createElement('div');
@@ -273,29 +273,15 @@ function makeTablesEditable() {
     // Add the list container to the body
     document.body.appendChild(listContainer);
 
-    // Close the list container when clicking outside
-    document.addEventListener('click', handleDocumentClick);
+    // Close the list container when clicking or touching anywhere on the website
+    document.addEventListener('pointerdown', handleWebsiteInteraction);
 
-    // Close the list container when scrolling anywhere on the website
-    window.addEventListener('wheel', handleWebsiteScroll);
-
-    // Function to handle clicks outside the list container
-    function handleDocumentClick(event) {
+    // Function to handle clicks or touches anywhere on the website
+    function handleWebsiteInteraction(event) {
       if (listContainer && listContainer.parentNode && !listContainer.contains(event.target) && event.target !== cell) {
         listContainer.parentNode.removeChild(listContainer);
-        document.removeEventListener('click', handleDocumentClick);
-        window.removeEventListener('wheel', handleWebsiteScroll); // Remove the website scroll event listener
+        document.removeEventListener('pointerdown', handleWebsiteInteraction);
       }
-    }
-
-    // Function to handle scrolling anywhere on the website
-    function handleWebsiteScroll() {
-      if (listContainer && listContainer.parentNode) {
-        listContainer.parentNode.removeChild(listContainer);
-      }
-    
-      document.removeEventListener('click', handleDocumentClick);
-      window.removeEventListener('wheel', handleWebsiteScroll);
     }
   }
 }

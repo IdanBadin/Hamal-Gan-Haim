@@ -45,6 +45,11 @@ function displayTables() {
                   </div>
                 </th>
               </tr>
+              <tr>
+                <th></th>
+                <th style="text-align: center; font-size: 20px">חמוש</th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
               <tr class="spaceUnder"><td id="hour">${cellData[0] || '02:00 - 00:00'}</td><td>${cellData[1] || ''}</td><td>${cellData[2] || ''}</td></tr>

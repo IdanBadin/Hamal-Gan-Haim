@@ -20,15 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Insert the navigation bar HTML into the body
     document.body.insertAdjacentHTML('afterbegin', navbarHtml);
 
-    // Apply initial styles immediately
-    applyInitialStyles();
-
-    // Delayed transition after a short delay
+    // Apply initial styles with a short delay
     setTimeout(function () {
-        const navbarButtons = document.querySelectorAll('.navbar-button');
-        navbarButtons.forEach(button => {
-            button.querySelector('.highlight').style.width = '100%';
-        });
+        applyInitialStyles();
+        applyTransitionEffect();
     }, 1000); // Adjust the delay as needed
 });
 
@@ -43,5 +38,13 @@ function applyInitialStyles() {
         if (currentPage.includes(buttonLink)) {
             button.classList.add('active');
         }
+    });
+}
+
+// Function to apply transition effect
+function applyTransitionEffect() {
+    const navbarButtons = document.querySelectorAll('.navbar-button');
+    navbarButtons.forEach(button => {
+        button.querySelector('.highlight').style.width = '100%';
     });
 }

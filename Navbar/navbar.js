@@ -43,8 +43,13 @@ function applyInitialStyles() {
 
 // Function to apply transition effect
 function applyTransitionEffect() {
+    const currentPage = window.location.href;
     const navbarButtons = document.querySelectorAll('.navbar-button');
+
     navbarButtons.forEach(button => {
-        button.querySelector('.highlight').style.width = '100%';
+        const buttonLink = button.querySelector('a').href;
+        if (currentPage.includes(buttonLink)) {
+            button.querySelector('.highlight').style.width = '100%';
+        }
     });
 }

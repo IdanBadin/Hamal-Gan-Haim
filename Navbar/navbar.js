@@ -20,18 +20,48 @@ document.addEventListener("DOMContentLoaded", function () {
     // Insert the navigation bar HTML into the body
     document.body.insertAdjacentHTML('afterbegin', navbarHtml);
 
-    // Apply initial styles with a short delay
-    setTimeout(function () {
-        const currentPage = window.location.href;
+    // Apply initial styles immediately
+    applyInitialStyles();
 
-        // Update the active button based on the current page
-        const navbarButtons = document.querySelectorAll('.navbar-button');
-        navbarButtons.forEach(button => {
-            const buttonLink = button.querySelector('a').href;
-            if (currentPage.includes(buttonLink)) {
-                button.classList.add('active');
-                button.querySelector('.highlight').style.width = '100%';
-            }
+    // Handle click events on links
+    const navLinks = document.querySelectorAll('.navbar-button a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            const targetPage = this.getAttribute('href');
+            navigateTo(targetPage);
         });
-    }, 500); // Adjust the delay as needed
+    });
 });
+
+// Function to apply initial styles
+function applyInitialStyles() {
+    const currentPage = window.location.href;
+    // Update the active button based on the current page
+    const navbarButtons = document.querySelectorAll('.navbar-button');
+    navbarButtons.forEach(button => {
+        const buttonLink = button.querySelector('a').href;
+        if (currentPage.includes(buttonLink)) {
+            button.classList.add('active');
+            button.querySelector('.highlight').style.width = '100%';
+        }
+    });
+}
+
+// Function to handle navigation
+function navigateTo(targetPage) {
+    // Remove 'active' class and reset highlight for all buttons
+    const navbarButtons = document.querySelectorAll('.navbar-button');
+    navbarButtons.forEach(button => {
+        button.classList.remove('active');
+        button.querySelector('.highlight').style.width = '0';
+    });
+
+    // Add 'active' class and update highlight for the clicked button
+    const clickedButton = document.querySelector(`.navbar-button a[href="${targetPage}"]`).parentNode;
+    clickedButton.classList.add('active');
+    clickedButton.querySelector('.highlight').style.width = '100%';
+
+    // Navigate to the target page
+    window.location.href = targetPage;
+}

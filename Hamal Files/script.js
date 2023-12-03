@@ -294,20 +294,17 @@ window.onload = function () {
   var currentDate = getCurrentDateFormatted();
   console.log("The current date is: " + currentDate);
 
-  // Introduce a delay (e.g., 1500 milliseconds) to wait for the tables to load
-  setTimeout(function () {
-    var anchor = document.getElementById(currentDate);
+  var anchor = document.getElementById(currentDate);
 
-    if (anchor) {
-      if ('scrollBehavior' in document.documentElement.style) {
-        anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        anchor.scrollIntoView(true);
-      }
+  if (anchor) {
+    if ('scrollBehavior' in document.documentElement.style) {
+      anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-      console.log("Element with ID " + currentDate + " not found.");
+      anchor.scrollIntoView(true);
     }
-  }, 1500); // Adjust the delay as needed
+  } else {
+    console.log("Element with ID " + currentDate + " not found.");
+  }
 };
 
 function getCurrentHebrewDate() {

@@ -228,21 +228,24 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 // Function to fetch and display tablesData from Firestore
 async function fetchAndDisplayTables() {
-    try {
+  try {
       const tablesSnapshot = await db.collection('tables').doc('tablesData').get();
-      const tablesDataFromFirestore = tablesSnapshot.data().tablesData;
-  
+      const tablesDataFromFirestore = tablesSnapshot.data()?.tablesData;
+
       if (tablesDataFromFirestore) {
-        // Update tablesData without affecting the original array reference
-        tablesData.length = 0;
-        tablesData.push(...tablesDataFromFirestore);
-        displayTables();
+          // Update tablesData without affecting the original array reference
+          tablesData.length = 0;
+          tablesData.push(...tablesDataFromFirestore);
+          displayTables();
+
+          // Show the addTableButtonContainer div after displaying tables
+          document.getElementById('addTableButtonContainer').style.display = 'block';
       } else {
-        console.log('No data found in Firestore.');
+          console.log('No data found in Firestore.');
       }
-    } catch (error) {
+  } catch (error) {
       console.error('Error fetching data from Firestore:', error);
-    }
+  }
 }
 
 addTableButton.addEventListener("click", function () {

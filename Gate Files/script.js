@@ -237,8 +237,8 @@ function makeTablesEditable() {
     listContainer.style.border = '1px solid black';
     listContainer.style.padding = '10px';
     listContainer.style.borderRadius = '5px';
-    listContainer.style.width = '200px'; // Set the width to a smaller value
-    listContainer.style.maxHeight = '300px'; // Set a fixed height for the container
+    listContainer.style.width = '235px'; // Set the width to a smaller value
+    listContainer.style.maxHeight = '400px'; // Set a fixed height for the container
     listContainer.style.overflowY = 'auto'; // Enable vertical scrolling
 
     // Create a list of buttons for each person
@@ -248,12 +248,14 @@ function makeTablesEditable() {
 
       // Adjust the styling for each button
       button.style.width = '100%';
+      button.style.height = '40px';
       button.style.padding = '8px';
       button.style.marginBottom = '8px'; // Add margin to separate buttons
       button.style.border = 'none';
       button.style.borderRadius = '3px';
       button.style.cursor = 'pointer';
-      button.style.fontSize = '14px'; // Adjust the font size
+      button.style.fontSize = '20px'; // Adjust the font size
+      button.style.fontWeight = 'bold'; // Adjust the font size
 
       button.addEventListener('click', () => {
         cell.innerHTML = person;
@@ -306,21 +308,24 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 // Function to fetch and display gateTablesData from Firestore
 async function fetchAndDisplayTables() {
-    try {
-        const tablesSnapshot = await db.collection('gateTables').doc('GateTablesData').get();
-        const gateTablesDataFromFirestore = tablesSnapshot.data()?.gateTablesData;
+  try {
+      const tablesSnapshot = await db.collection('gateTables').doc('GateTablesData').get();
+      const gateTablesDataFromFirestore = tablesSnapshot.data()?.gateTablesData;
 
-        if (gateTablesDataFromFirestore) {
-            // Update gateTablesData without affecting the original array reference
-            gateTablesData.length = 0;
-            gateTablesData.push(...gateTablesDataFromFirestore);
-            displayTables();
-        } else {
-            console.log('No data found in Firestore.');
-        }
-    } catch (error) {
-        console.error('Error fetching data from Firestore:', error);
-    }
+      if (gateTablesDataFromFirestore) {
+          // Update gateTablesData without affecting the original array reference
+          gateTablesData.length = 0;
+          gateTablesData.push(...gateTablesDataFromFirestore);
+          displayTables();
+
+          // Show the addTableButtonContainer div after displaying tables
+          document.getElementById('addTableButtonContainer').style.display = 'block';
+      } else {
+          console.log('No data found in Firestore.');
+      }
+  } catch (error) {
+      console.error('Error fetching data from Firestore:', error);
+  }
 }
 
 addTableButton.addEventListener("click", function () {

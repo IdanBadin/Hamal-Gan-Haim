@@ -2,16 +2,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // Create the navigation bar HTML
     const navbarHtml = `
         <div id="bottom-navbar">
-            <div class="navbar-button" id="HamalTableButton">
-                <a href="./index.html">
-                    <img style="height: 40px" id="HamalLogo" src="./Images/HamalLogo.png" alt="חמ״ל">
-                    <div class="highlight"></div>
+            <div class="navbar-button" id="HamalTableButtonLogoDiv">
+                <div style="margin-top: -13px;padding-top: 3px" class="highlight"></div>
+                <a style="text-decoration: none;color: black" href="./index.html">
+                    <div style="align-items: center;justify-content: center;display: flex">
+                        <img style="height: 35px" id="HamalLogo" src="./Images/HamalLogo.png" alt="חמ״ל">
+                    </div>
+                    <div style="text-align: center;margin-bottom: -4px">חמ״ל</div>
                 </a>
             </div>
-            <div class="navbar-button" id="GateTableButton">
-                <a href="./gate.html">
-                    <img style="height: 40px" id="GateLogo" src="./Images/GateLogo.png" alt="שער">
-                    <div class="highlight"></div>
+            <div class="navbar-button" id="GateTableButtonLogoDiv">
+                <div style="margin-top: -13px;padding-top: 3px" class="highlight"></div>
+                <a style="text-decoration: none;color: black" href="./gate.html">
+                    <div style="align-items: center;justify-content: center;display: flex">
+                        <img style="height: 35px" id="GateLogo" src="./Images/GateLogo.png" alt="שער">
+                    </div>
+                    <div style="text-align: center;margin-bottom: -4px">שער</div>
                 </a>
             </div>
         </div>

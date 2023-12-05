@@ -1,11 +1,11 @@
 // Replace this with your Firebase project configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBJhvGJU2t7YVuPI6ibeJVfujywYPFRq-U",
-    authDomain: "hamal-gan-haim-d7041.firebaseapp.com",
-    projectId: "hamal-gan-haim-d7041",
-    storageBucket: "hamal-gan-haim-d7041.appspot.com",
-    messagingSenderId: "715588532208",
-    appId: "1:715588532208:web:c7ef59540631c7c2ef8f35"
+  apiKey: "AIzaSyBJhvGJU2t7YVuPI6ibeJVfujywYPFRq-U",
+  authDomain: "hamal-gan-haim-d7041.firebaseapp.com",
+  projectId: "hamal-gan-haim-d7041",
+  storageBucket: "hamal-gan-haim-d7041.appspot.com",
+  messagingSenderId: "715588532208",
+  appId: "1:715588532208:web:c7ef59540631c7c2ef8f35"
 };
 
 // Initialize Firebase
@@ -30,68 +30,68 @@ function assignDateToId(gateTablesData) {
 
 // Updated displayTables function
 function displayTables() {
-    tablesContainer.innerHTML = gateTablesData.map((table, index) => {
-      const cellData = table.cellData || []; // Use the cellData property or an empty array if not present
-      return `
-        <div id="${table.id}" class="tableBlock">
-          <table class="editableTable" style="font-size: 16px;width: 100%;direction: rtl; text-align: right">
-            <thead>
-              <tr>
-                <th colspan="3" id="tableHeaderElement">
-                  <div id="tableHeaderContainer" style="position: relative">
-                    <div id="calendarIconDiv"><img style="width: 30px;height: 30px" src="./Images/calendar.png" alt="calendar""></div>
-                    <div id="tableTitleTextDiv">${table.title}</div>
-                    <div id="deleteTableBtnDiv"><img class="deleteTableBtn" src="./Images/delete.png" alt="Delete Button" onclick="deleteTable('${table.id}', ${index})"></div>
-                  </div>
-                </th>
-              </tr>
-              <tr>
-                <th></th>
-                <th style="text-align: center; font-size: 20px">חמוש</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="spaceUnder"><td id="hour">${cellData[0] || '02:00 - 00:00'}</td><td>${cellData[1] || ''}</td><td>${cellData[2] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[3] || '04:00 - 02:00'}</td><td>${cellData[4] || ''}</td><td>${cellData[5] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[6] || '06:00 - 04:00'}</td><td>${cellData[7] || ''}</td><td>${cellData[8] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[9] || '08:00 - 06:00'}</td><td>${cellData[10] || ''}</td><td>${cellData[11] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[12] || '10:00 - 08:00'}</td><td>${cellData[13] || ''}</td><td>${cellData[14] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[15] || '12:00 - 10:00'}</td><td>${cellData[16] || ''}</td><td>${cellData[17] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[18] || '14:00 - 12:00'}</td><td>${cellData[19] || ''}</td><td>${cellData[20] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[21] || '16:00 - 14:00'}</td><td>${cellData[22] || ''}</td><td>${cellData[23] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[24] || '18:00 - 16:00'}</td><td>${cellData[25] || ''}</td><td>${cellData[26] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[27] || '20:00 - 18:00'}</td><td>${cellData[28] || ''}</td><td>${cellData[29] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[30] || '22:00 - 20:00'}</td><td>${cellData[31] || ''}</td><td>${cellData[32] || ''}</td></tr>
-              <tr class="spaceUnder"><td id="hour">${cellData[33] || '00:00 - 22:00'}</td><td>${cellData[34] || ''}</td><td>${cellData[35] || ''}</td></tr>
-            </tbody>
-          </table>
-        </div>`;
-    }).join("<br>");
+  tablesContainer.innerHTML = gateTablesData.map((table, index) => {
+    const cellData = table.cellData || []; // Use the cellData property or an empty array if not present
+    return `
+      <div id="${table.id}" class="tableBlock">
+        <table class="editableTable" style="font-size: 16px;width: 100%;direction: rtl; text-align: right">
+          <thead>
+            <tr>
+              <th colspan="3" id="tableHeaderElement">
+                <div id="tableHeaderContainer" style="position: relative">
+                  <div id="calendarIconDiv"><img style="width: 30px;height: 30px" src="./Images/calendar.png" alt="calendar""></div>
+                  <div id="tableTitleTextDiv">${table.title}</div>
+                  <div id="deleteTableBtnDiv"><img class="deleteTableBtn" src="./Images/delete.png" alt="Delete Button" onclick="deleteTable('${table.id}', ${index})"></div>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th></th>
+              <th style="text-align: center; font-size: 20px">חמוש</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="spaceUnder"><td id="hour">${cellData[0] || '02:00 - 00:00'}</td><td>${cellData[1] || ''}</td><td>${cellData[2] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[3] || '04:00 - 02:00'}</td><td>${cellData[4] || ''}</td><td>${cellData[5] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[6] || '06:00 - 04:00'}</td><td>${cellData[7] || ''}</td><td>${cellData[8] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[9] || '08:00 - 06:00'}</td><td>${cellData[10] || ''}</td><td>${cellData[11] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[12] || '10:00 - 08:00'}</td><td>${cellData[13] || ''}</td><td>${cellData[14] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[15] || '12:00 - 10:00'}</td><td>${cellData[16] || ''}</td><td>${cellData[17] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[18] || '14:00 - 12:00'}</td><td>${cellData[19] || ''}</td><td>${cellData[20] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[21] || '16:00 - 14:00'}</td><td>${cellData[22] || ''}</td><td>${cellData[23] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[24] || '18:00 - 16:00'}</td><td>${cellData[25] || ''}</td><td>${cellData[26] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[27] || '20:00 - 18:00'}</td><td>${cellData[28] || ''}</td><td>${cellData[29] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[30] || '22:00 - 20:00'}</td><td>${cellData[31] || ''}</td><td>${cellData[32] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[33] || '00:00 - 22:00'}</td><td>${cellData[34] || ''}</td><td>${cellData[35] || ''}</td></tr>
+          </tbody>
+        </table>
+      </div>`;
+  }).join("<br>");
 }
 
 // Function to save edited content to Firestore
 async function saveToFirestore() {
-    const tables = document.querySelectorAll('.editableTable');
-    tables.forEach((table, index) => {
-      const cells = table.getElementsByTagName('td');
-      const data = [];
-      Array.from(cells).forEach((cell) => {
-        data.push(cell.innerHTML);
-      });
-      gateTablesData[index].cellData = data; // Update the cellData property in gateTablesData
+  const tables = document.querySelectorAll('.editableTable');
+  tables.forEach((table, index) => {
+    const cells = table.getElementsByTagName('td');
+    const data = [];
+    Array.from(cells).forEach((cell) => {
+      data.push(cell.innerHTML);
     });
-  
-    try {
-      // Update gateTablesData in Firestore
-      await db.collection('gateTables').doc('GateTablesData').set({
-        gateTablesData
-      });
-  
-      console.log('Data saved to Firestore successfully.');
-    } catch (error) {
-      console.error('Error saving data to Firestore:', error);
-    }
+    gateTablesData[index].cellData = data; // Update the cellData property in gateTablesData
+  });
+
+  try {
+    // Update gateTablesData in Firestore
+    await db.collection('gateTables').doc('GateTablesData').set({
+      gateTablesData
+    });
+
+    console.log('Data saved to Firestore successfully.');
+  } catch (error) {
+    console.error('Error saving data to Firestore:', error);
+  }
 }
 
 // Function to fetch gateTablesData from Firestore
@@ -102,63 +102,63 @@ async function fetchFromFirestore() {
 
 // Function to add table to Firestore
 async function addTableToArray(table) {
-    const newTable = {
-      title: table.title,
-      cellData: getDefaultCellData()
-    };
-    gateTablesData.push(newTable);
-    gateTablesData = assignDateToId(gateTablesData);
-    localStorage.setItem("gateTables", JSON.stringify(gateTablesData));
-  
-    // Save the new table to Firestore immediately
-    await saveToFirestore();
-  
-    displayTables();
-    makeTablesEditable();
+  const newTable = {
+    title: table.title,
+    cellData: getDefaultCellData()
+  };
+  gateTablesData.push(newTable);
+  gateTablesData = assignDateToId(gateTablesData);
+  localStorage.setItem("gateTables", JSON.stringify(gateTablesData));
+
+  // Save the new table to Firestore immediately
+  await saveToFirestore();
+
+  displayTables();
+  makeTablesEditable();
 }
 
 // Function to get default cell data
 function getDefaultCellData() {
-    return Array(36).fill(''); // Create an array with 36 empty strings for default cell data
+  return Array(36).fill(''); // Create an array with 36 empty strings for default cell data
 }
 
 // Updated deleteTable function
 async function deleteTable(id, index) {
-    try {
-      const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
+  try {
+    const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
 
-        if (confirmDelete) {
-          const tableIndex = index;
-          if (tableIndex > -1) {
-              // Remove table data from Firestore
-              await db.collection('gateTables').doc('GateTablesData').update({
-                  gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
-              });
+      if (confirmDelete) {
+        const tableIndex = index;
+        if (tableIndex > -1) {
+            // Remove table data from Firestore
+            await db.collection('gateTables').doc('GateTablesData').update({
+                gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
+            });
 
-              // Remove table from the DOM
-              const tableElement = document.getElementById(id);
-              tableElement.parentNode.removeChild(tableElement);
+            // Remove table from the DOM
+            const tableElement = document.getElementById(id);
+            tableElement.parentNode.removeChild(tableElement);
 
-              // Remove table data from gateTablesData array
-              gateTablesData.splice(tableIndex, 1);
+            // Remove table data from gateTablesData array
+            gateTablesData.splice(tableIndex, 1);
 
-              console.log("Data saved to Firestore successfully.");
+            console.log("Data saved to Firestore successfully.");
 
-              // Check if gateTablesData is empty and clear local storage
-              if (gateTablesData.length === 0) {
-                  localStorage.clear();
-              }
-          }
-
-          displayTables();
-          makeTablesEditable();
-
-          console.log("Updated gateTables array content after deletion:");
-          console.log(gateTablesData);
+            // Check if gateTablesData is empty and clear local storage
+            if (gateTablesData.length === 0) {
+                localStorage.clear();
+            }
         }
-    } catch (error) {
-        console.error('Error deleting table:', error);
-    }
+
+        displayTables();
+        makeTablesEditable();
+
+        console.log("Updated gateTables array content after deletion:");
+        console.log(gateTablesData);
+      }
+  } catch (error) {
+      console.error('Error deleting table:', error);
+  }
 }
 
 // Function to make tables editable
@@ -296,18 +296,18 @@ document.addEventListener('touchstart', function () {
   // Save the data to Firestore
   saveToFirestore();
 });
-  
+
 // Call makeTablesEditable when the DOM content is fully loaded
 document.addEventListener('DOMContentLoaded', async function () {
-    console.log('DOM content loaded. Fetching and displaying tables...');
-    await fetchAndDisplayTables(); // Use await to make sure the data is fetched before proceeding
-  
-    // Introduce a slight delay before making tables editable
-    setTimeout(() => {
-      console.log('Tables fetched and displayed. Making tables editable...');
-      makeTablesEditable();
-      console.log('Tables are now editable.');
-    }, 500); // Adjust the delay time as needed
+  console.log('DOM content loaded. Fetching and displaying tables...');
+  await fetchAndDisplayTables(); // Use await to make sure the data is fetched before proceeding
+
+  // Introduce a slight delay before making tables editable
+  setTimeout(() => {
+    console.log('Tables fetched and displayed. Making tables editable...');
+    makeTablesEditable();
+    console.log('Tables are now editable.');
+  }, 500); // Adjust the delay time as needed
 });  
 
 // Function to fetch and display gateTablesData from Firestore
@@ -333,15 +333,15 @@ async function fetchAndDisplayTables() {
 }
 
 addTableButton.addEventListener("click", function () {
-    addTableToArray({ title: getNextDayAndDate(gateTablesData) });
+  addTableToArray({ title: getNextDayAndDate(gateTablesData) });
 });
 
 document.addEventListener('DOMContentLoaded', async function () {
-    console.log('DOM content loaded. Fetching and displaying tables...');
-    await fetchAndDisplayTables(); // Use await to make sure the data is fetched before proceeding
-    console.log('Tables fetched and displayed. Making tables editable...');
-    makeTablesEditable();
-    console.log('Tables are now editable.');
+  console.log('DOM content loaded. Fetching and displaying tables...');
+  await fetchAndDisplayTables(); // Use await to make sure the data is fetched before proceeding
+  console.log('Tables fetched and displayed. Making tables editable...');
+  makeTablesEditable();
+  console.log('Tables are now editable.');
 });
 
 // Function to generate next day and date to last item in tablesData array

@@ -68,22 +68,22 @@ function displayTables() {
 // Function to save edited content to Firestore
 async function saveToFirestore() {
   const tables = document.querySelectorAll('.editableTable');
-  tables.forEach((table, index) => {
-    const cells = table.getElementsByTagName('td');
-    const data = [];
-    Array.from(cells).forEach((cell) => {
-      data.push(cell.innerHTML);
-    });
-    tablesData[index].cellData = data; // Update the cellData property in tablesData
-  });
 
   try {
-    // Update tablesData in Firestore
-    await db.collection('tables').doc('tablesData').set({
-      tablesData
+    const updatePromises = Array.from(tables).map(async (table, index) => {
+      const cells = table.getElementsByTagName('td');
+      const data = Array.from(cells).map((cell) => cell.innerHTML);
+      tablesData[index].cellData = data;
+
+      // Update the tablesData in Firestore
+      await db.collection('tables').doc('tablesData').set({
+        tablesData
+      });
+
+      console.log('Data saved to Firestore successfully.');
     });
 
-    console.log('Data saved to Firestore successfully.');
+    await Promise.all(updatePromises);
   } catch (error) {
     console.error('Error saving data to Firestore:', error);
   }
@@ -120,40 +120,45 @@ function getDefaultCellData() {
 // Updated deleteTable function
 async function deleteTable(id, index) {
   try {
-      const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
+    const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
 
-      if (confirmDelete) {
-          const tableIndex = index;
-          if (tableIndex > -1) {
-              // Remove table data from Firestore
-              await db.collection('tables').doc('tablesData').update({
-                  tablesData: firebase.firestore.FieldValue.arrayRemove(tablesData[tableIndex])
-              });
+    if (confirmDelete) {
+      const tableIndex = index;
+      if (tableIndex > -1) {
+        await db.runTransaction(async (transaction) => {
+          const docRef = db.collection('tables').doc('tablesData');
+          const doc = await transaction.get(docRef);
 
-              // Remove table from the DOM
-              const tableElement = document.getElementById(id);
-              tableElement.parentNode.removeChild(tableElement);
+          // Remove table data from Firestore
+          transaction.update(docRef, {
+            tablesData: firebase.firestore.FieldValue.arrayRemove(tablesData[tableIndex])
+          });
 
-              // Remove table data from tablesData array
-              tablesData.splice(tableIndex, 1);
+          // Remove table data from tablesData array
+          tablesData.splice(tableIndex, 1);
+        });
 
-              console.log("Data saved to Firestore successfully.");
+        // Remove table from the DOM
+        const tableElement = document.getElementById(id);
+        tableElement.parentNode.removeChild(tableElement);
 
-              // Check if tablesData is empty and clear local storage
-              if (tablesData.length === 0) {
-                  localStorage.clear();
-              }
-          }
+        console.log("Data saved to Firestore successfully.");
 
-          displayTables();
-          makeTablesEditable();
-
-          console.log("Updated tables array content after deletion:");
-          console.log(tablesData);
+        // Check if tablesData is empty and clear local storage
+        if (tablesData.length === 0) {
+          localStorage.clear();
+        }
       }
-  } catch (error) {
-      console.error('Error deleting table:', error);
+
+      displayTables();
+      makeTablesEditable();
+
+      console.log("Updated tables array content after deletion:");
+      console.log(tablesData);
     }
+  } catch (error) {
+    console.error('Error deleting table:', error);
+  }
 }
 
 // Function to make tables editable
@@ -161,46 +166,46 @@ function makeTablesEditable() {
   const tables = document.querySelectorAll('.editableTable');
 
   tables.forEach((table, tableIndex) => {
-      const cells = table.getElementsByTagName('td');
-      Array.from(cells).forEach((cell, cellIndex) => {
-          let tapCount = 0;
-          let debounceTimer;
+    const cells = table.getElementsByTagName('td');
+    Array.from(cells).forEach((cell, cellIndex) => {
+      let tapCount = 0;
+      let debounceTimer;
 
-          cell.setAttribute('id', `cell${tableIndex + 1}_${cellIndex + 1}`);
+      cell.setAttribute('id', `cell${tableIndex + 1}_${cellIndex + 1}`);
 
-          cell.addEventListener('mousedown', function (event) {
-              event.preventDefault(); // Prevent default behavior to avoid selection of text
-          });
-
-          cell.addEventListener('click', function () {
-              clearTimeout(debounceTimer);
-
-              if (tapCount === 5 || this.innerHTML.trim() === '') {
-                  this.contentEditable = "true";
-                  this.focus();
-
-                  this.addEventListener('keydown', (e) => {
-                      if (e.key === 'Enter') {
-                          e.preventDefault(); // Prevent default behavior of Enter key
-                          this.contentEditable = "false";
-                          handleCellEdit(this);
-                          tapCount = 0; // Reset the tap count for the specific cell after successfully editing
-                      }
-                  });
-              }
-              if (this.innerHTML.trim() !== '') {
-                  tapCount++;
-                  if (tapCount === 5) {
-                      this.style.border = "1px solid black";
-                  }
-
-                  // Reset the tap count after a short delay (e.g., 1 second)
-                  debounceTimer = setTimeout(() => {
-                      tapCount = 0;
-                  }, 1000);
-              }
-          });
+      cell.addEventListener('mousedown', function (event) {
+        event.preventDefault(); // Prevent default behavior to avoid selection of text
       });
+
+      cell.addEventListener('click', function () {
+        clearTimeout(debounceTimer);
+
+        if (tapCount === 5 || this.innerHTML.trim() === '') {
+          this.contentEditable = "true";
+          this.focus();
+
+          this.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault(); // Prevent default behavior of Enter key
+              this.contentEditable = "false";
+              handleCellEdit(this);
+              tapCount = 0; // Reset the tap count for the specific cell after successfully editing
+            }
+          });
+        }
+        if (this.innerHTML.trim() !== '') {
+          tapCount++;
+          if (tapCount === 5) {
+            this.style.border = "1px solid black";
+          }
+
+          // Reset the tap count after a short delay (e.g., 1 second)
+          debounceTimer = setTimeout(() => {
+            tapCount = 0;
+          }, 1000);
+        }
+      });
+    });
   });
 
   // Function to handle cell edit (separate from the keydown event)

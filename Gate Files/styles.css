@@ -167,3 +167,14 @@ table {
     background-color: #79AC78;
     transition: width 0.3s ease 0.5s; /* Add a small delay for the initial width */
 }
+
+.roundedSaveChangesButton {
+    position: fixed;
+    right: 20px;
+    margin-bottom: 180px;
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    display: flex;
+    justify-content: flex-end;
+}

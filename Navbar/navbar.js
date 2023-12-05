@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Create the navigation bar HTML
     const navbarHtml = `
         <div id="bottom-navbar">
+            <div class="roundedSaveChangesButton">
+                <img id="saveButtonLogo" style="height: 55px" src="./Images/yes.png" alt="שמור שינויים">
+            </div>
             <div class="navbar-button" id="HamalTableButtonLogoDiv">
                 <div style="margin-top: -13px;padding-top: 3px" class="highlight"></div>
                 <a style="text-decoration: none;color: black" href="./index.html">
@@ -35,18 +38,30 @@ document.addEventListener("DOMContentLoaded", function () {
     // Insert the navigation bar HTML into the body
     document.body.insertAdjacentHTML('afterbegin', navbarHtml);
 
-    // Apply initial styles with a short delay
-    setTimeout(function () {
-        const currentPage = window.location.href;
+    const currentPage = window.location.href;
 
-        // Update the active button based on the current page
-        const navbarButtons = document.querySelectorAll('.navbar-button');
-        navbarButtons.forEach(button => {
-            const buttonLink = button.querySelector('a').href;
-            if (currentPage.includes(buttonLink)) {
-                button.classList.add('active');
-                button.querySelector('.highlight').style.width = '100%';
-            }
-        });
-    }, 1000); // Adjust the delay as needed
+    // Check if the user is on the contacts.html page and hide the roundedSaveChangesButton
+    if (currentPage.includes('contacts.html')) {
+        const saveChangesButton = document.querySelector('.roundedSaveChangesButton');
+        saveChangesButton.style.display = 'none';
+    } else {
+        // Update the active button based on the current page with a delay
+        setTimeout(function () {
+            const navbarButtons = document.querySelectorAll('.navbar-button');
+            navbarButtons.forEach(button => {
+                const buttonLink = button.querySelector('a').href;
+                if (currentPage.includes(buttonLink)) {
+                    button.classList.add('active');
+                    button.querySelector('.highlight').style.width = '100%';
+                }
+            });
+        }, 1000); // Adjust the delay as needed
+    }
+
+    // Add event listener for the new rounded button
+    const saveChangesButton = document.getElementById('saveButtonLogo');
+    saveChangesButton.addEventListener('click', function () {
+        // Display the pop-up/modal with "Changes saved" message
+        alert('השינויים נשמרו!');
+    });
 });

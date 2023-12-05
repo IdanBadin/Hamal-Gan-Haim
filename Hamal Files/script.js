@@ -119,37 +119,41 @@ async function addTableToArray(table) {
 
 // Updated deleteTable function
 async function deleteTable(id, index) {
-    try {
-      const tableIndex = index;
-      if (tableIndex > -1) {
-        // Remove table data from Firestore
-        await db.collection('tables').doc('tablesData').update({
-          tablesData: firebase.firestore.FieldValue.arrayRemove(tablesData[tableIndex])
-        });
-  
-        // Remove table from the DOM
-        const tableElement = document.getElementById(id);
-        tableElement.parentNode.removeChild(tableElement);
-  
-        // Remove table data from tablesData array
-        tablesData.splice(tableIndex, 1);
-  
-        console.log("Data saved to Firestore successfully.");
-  
-        // Check if tablesData is empty and clear local storage
-        if (tablesData.length === 0) {
-          localStorage.clear();
-        }
+  try {
+      const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
+
+      if (confirmDelete) {
+          const tableIndex = index;
+          if (tableIndex > -1) {
+              // Remove table data from Firestore
+              await db.collection('tables').doc('tablesData').update({
+                  tablesData: firebase.firestore.FieldValue.arrayRemove(tablesData[tableIndex])
+              });
+
+              // Remove table from the DOM
+              const tableElement = document.getElementById(id);
+              tableElement.parentNode.removeChild(tableElement);
+
+              // Remove table data from tablesData array
+              tablesData.splice(tableIndex, 1);
+
+              console.log("Data saved to Firestore successfully.");
+
+              // Check if tablesData is empty and clear local storage
+              if (tablesData.length === 0) {
+                  localStorage.clear();
+              }
+          }
+
+          displayTables();
+          makeTablesEditable();
+
+          console.log("Updated tables array content after deletion:");
+          console.log(tablesData);
       }
-  
-      displayTables();
-      makeTablesEditable();
-  
-      console.log("Updated tables array content after deletion:");
-      console.log(tablesData);
-    } catch (error) {
+  } catch (error) {
       console.error('Error deleting table:', error);
-    }
+  }
 }
 
 // Function to make tables editable

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            background-color: #fff;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #addContactBtn, #saveChangesBtn {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .loading-indicator {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+    <title>Contact Information</title>
+</head>
+<body>
+
+    <table id="contactsTable">
+        <thead>
+            <tr>
+                <th>טלפון</th>
+                <th>שם משפחה</th>
+                <th>שם פרטי</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated dynamically from Firebase -->
+        </tbody>
+    </table>
+
+    <button id="addContactBtn" onclick="addContact()">Add Contact</button>
+    <button id="saveChangesBtn" onclick="saveChanges()">Save Changes</button>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJhvGJU2t7YVuPI6ibeJVfujywYPFRq-U",
+            authDomain: "hamal-gan-haim-d7041.firebaseapp.com",
+            projectId: "hamal-gan-haim-d7041",
+            storageBucket: "hamal-gan-haim-d7041.appspot.com",
+            messagingSenderId: "715588532208",
+            appId: "1:715588532208:web:c7ef59540631c7c2ef8f35"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        var db = firebase.firestore();
+        var contactsRef = db.collection("contactsTable").doc("contactsData").collection("contacts");
+
+        // Function to fetch and display contacts
+        function fetchContacts() {
+            var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
+            var loadingIndicator = document.createElement('p');
+            loadingIndicator.textContent = 'Loading contacts...';
+            loadingIndicator.className = 'loading-indicator';
+            tableBody.appendChild(loadingIndicator);
+
+            contactsRef.get().then((querySnapshot) => {
+                tableBody.innerHTML = ""; // Clear existing rows
+
+                querySnapshot.forEach((doc) => {
+                    var contact = doc.data();
+                    var newRow = tableBody.insertRow(tableBody.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    var cell3 = newRow.insertCell(2);
+
+                    cell1.contentEditable = "true";
+                    cell2.contentEditable = "true";
+                    cell3.contentEditable = "true";
+
+                    cell1.textContent = contact.phone;
+                    cell2.textContent = contact.lastName;
+                    cell3.textContent = contact.firstName;
+
+                    // Set the Firestore document ID as a data attribute on the row
+                    newRow.setAttribute("data-doc-id", doc.id);
+                });
+
+                // Remove loading indicator after rendering
+                if (tableBody.contains(loadingIndicator)) {
+                    tableBody.removeChild(loadingIndicator);
+                }
+            });
+        }
+
+        function saveChanges() {
+            var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
+
+            // Iterate through each row in the table
+            for (var i = 0; i < tableBody.rows.length; i++) {
+                var row = tableBody.rows[i];
+
+                // Retrieve the values from the edited cells
+                var phone = row.cells[0].textContent.trim();
+                var lastName = row.cells[1].textContent.trim();
+                var firstName = row.cells[2].textContent.trim();
+
+                // Get the Firestore document ID from the row ID attribute
+                var docId = row.getAttribute("data-doc-id");
+
+                // Update the Firestore document with the edited values
+                contactsRef.doc(docId).update({
+                    phone: phone,
+                    lastName: lastName,
+                    firstName: firstName
+                });
+            }
+
+            // Inform the user that changes have been saved
+            alert("Changes saved successfully!");
+        }
+
+        // Function to add a new contact
+        function addContact() {
+            var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
+
+            // Add a new row to the table
+            var newRow = tableBody.insertRow(tableBody.rows.length);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+
+            cell1.contentEditable = "true";
+            cell2.contentEditable = "true";
+            cell3.contentEditable = "true";
+
+            // Add the new contact to Firestore
+            contactsRef.add({
+                phone: "",
+                lastName: "",
+                firstName: ""
+            }).then((docRef) => {
+                // Set the Firestore document ID as a data attribute on the row
+                newRow.setAttribute("data-doc-id", docRef.id);
+                // Fetch contacts again after adding a new contact
+                fetchContacts();
+            });
+        }
+
+        // Function to save changes to Firestore (as before)
+
+        // Fetch contacts when the page loads
+        fetchContacts();
+    </script>
+</body>
+</html>

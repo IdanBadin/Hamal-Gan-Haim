@@ -125,33 +125,37 @@ function getDefaultCellData() {
 // Updated deleteTable function
 async function deleteTable(id, index) {
     try {
-        const tableIndex = index;
-        if (tableIndex > -1) {
-            // Remove table data from Firestore
-            await db.collection('gateTables').doc('GateTablesData').update({
-                gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
-            });
+      const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
 
-            // Remove table from the DOM
-            const tableElement = document.getElementById(id);
-            tableElement.parentNode.removeChild(tableElement);
+        if (confirmDelete) {
+          const tableIndex = index;
+          if (tableIndex > -1) {
+              // Remove table data from Firestore
+              await db.collection('gateTables').doc('GateTablesData').update({
+                  gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
+              });
 
-            // Remove table data from gateTablesData array
-            gateTablesData.splice(tableIndex, 1);
+              // Remove table from the DOM
+              const tableElement = document.getElementById(id);
+              tableElement.parentNode.removeChild(tableElement);
 
-            console.log("Data saved to Firestore successfully.");
+              // Remove table data from gateTablesData array
+              gateTablesData.splice(tableIndex, 1);
 
-            // Check if gateTablesData is empty and clear local storage
-            if (gateTablesData.length === 0) {
-                localStorage.clear();
-            }
+              console.log("Data saved to Firestore successfully.");
+
+              // Check if gateTablesData is empty and clear local storage
+              if (gateTablesData.length === 0) {
+                  localStorage.clear();
+              }
+          }
+
+          displayTables();
+          makeTablesEditable();
+
+          console.log("Updated gateTables array content after deletion:");
+          console.log(gateTablesData);
         }
-
-        displayTables();
-        makeTablesEditable();
-
-        console.log("Updated gateTables array content after deletion:");
-        console.log(gateTablesData);
     } catch (error) {
         console.error('Error deleting table:', error);
     }

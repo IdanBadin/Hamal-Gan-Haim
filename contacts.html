@@ -3,20 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./Navbar/navbar.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
+            margin: 10px;
             padding: 0;
             background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+        }
+
+        .web-container {
+            background-color: transparent;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .contactsPageHeader {
+            background-color: #A9A9A9;
+            font-size: 30px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            border-radius: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            font-size: 16px;
         }
 
         th, td {
@@ -24,10 +48,12 @@
             padding: 8px;
             text-align: left;
             background-color: #fff;
+            text-align: right;
         }
 
         th {
             background-color: #f2f2f2;
+            font-size: 20px;
         }
 
         td:hover {
@@ -48,6 +74,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
         }
 
         .loading-indicator {
@@ -55,26 +82,73 @@
             text-align: center;
             font-weight: bold;
         }
+
+        #bottom-navbar {
+            background-color: whitesmoke;
+            width: 80%;
+            height: 60px;
+            position: fixed;
+            bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            border-radius: 10px;
+            -webkit-box-shadow: 0px 0px 16px -1px #000000;
+            box-shadow: 0px 0px 16px -1px #000000;
+            z-index: 9999;
+        }
+
+        #HamalTableButtonLogoDiv, #GateTableButtonLogoDiv {
+            background-color: transparent;
+            width: fit-content;
+        }
+
+        /* Add this style for the active state */
+        .navbar-button.active .highlight {
+            width: 100%;
+            height: 4px;
+            border-radius: 10px;
+            background-color: #BA704F;
+        }
+
+        .navbar-button {
+            position: relative;
+        }
+
+        .highlight {
+            position: absolute;
+            border-radius: 10px;
+            /* bottom: 0; */
+            left: 0;
+            width: 0;
+            height: 4px;
+            background-color: #BA704F;
+            transition: width 0.3s ease 0.5s; /* Add a small delay for the initial width */
+        }
+
     </style>
-    <title>Contact Information</title>
+    <title>Contacts Details</title>
 </head>
 <body>
-
-    <table id="contactsTable">
-        <thead>
-            <tr>
-                <th>טלפון</th>
-                <th>שם משפחה</th>
-                <th>שם פרטי</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data will be populated dynamically from Firebase -->
-        </tbody>
-    </table>
-
-    <button id="addContactBtn" onclick="addContact()">Add Contact</button>
-    <button id="saveChangesBtn" onclick="saveChanges()">Save Changes</button>
+    <div class="web-container">
+        <div class="contactsPageHeader">(גן חיים) רשימת אנשי קשר</div>
+        <table id="contactsTable">
+            <thead>
+                <tr>
+                    <th>טלפון</th>
+                    <th>שם משפחה</th>
+                    <th>שם פרטי</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be populated dynamically from Firebase using fetchContacts() function -->
+            </tbody>
+        </table>
+        <div style="display: flex;justify-content: flex-start;width: 100%;">
+            <button style="margin-right: 10px;" id="addContactBtn" onclick="addContact()">הוסף שורה</button>
+            <button id="saveChangesBtn" onclick="saveChanges()">שמור שינויים</button>
+        </div>
+    </div>
 
     <script>
         // Firebase configuration
@@ -100,7 +174,8 @@
             loadingIndicator.className = 'loading-indicator';
             tableBody.appendChild(loadingIndicator);
 
-            contactsRef.get().then((querySnapshot) => {
+            // Fetch contacts and order them by numerical ID
+            contactsRef.orderBy('contactId').get().then((querySnapshot) => {
                 tableBody.innerHTML = ""; // Clear existing rows
 
                 querySnapshot.forEach((doc) => {
@@ -120,6 +195,8 @@
 
                     // Set the Firestore document ID as a data attribute on the row
                     newRow.setAttribute("data-doc-id", doc.id);
+                    // Set the contact ID as a data attribute on the row
+                    newRow.setAttribute("data-contact-id", contact.contactId);
                 });
 
                 // Remove loading indicator after rendering
@@ -129,6 +206,44 @@
             });
         }
 
+        // Function to add a new contact
+        function addContact() {
+            var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
+
+            // Add a new row to the table at the end
+            var newRow = tableBody.insertRow(-1);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+
+            cell1.contentEditable = "true";
+            cell2.contentEditable = "true";
+            cell3.contentEditable = "true";
+
+            // Fetch the maximum contactId from Firestore and increment it by 1
+            contactsRef.orderBy('contactId', 'desc').limit(1).get().then((querySnapshot) => {
+                var newContactId = 1; // Default to 1 if there are no existing contacts
+
+                if (!querySnapshot.empty) {
+                    // If there are existing contacts, get the maximum contactId and increment it
+                    var maxContact = querySnapshot.docs[0].data();
+                    newContactId = maxContact.contactId + 1;
+                }
+
+                // Add the new contact to Firestore with the incremented contactId
+                contactsRef.doc(newContactId.toString()).set({
+                    phone: "",
+                    lastName: "",
+                    firstName: "",
+                    contactId: newContactId
+                }).then(() => {
+                    // Set the contact ID as a data attribute on the row
+                    newRow.setAttribute("data-contact-id", newContactId);
+                });
+            });
+        }
+
+        // Function to save changes to Firestore
         function saveChanges() {
             var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
 
@@ -141,11 +256,11 @@
                 var lastName = row.cells[1].textContent.trim();
                 var firstName = row.cells[2].textContent.trim();
 
-                // Get the Firestore document ID from the row ID attribute
-                var docId = row.getAttribute("data-doc-id");
+                // Get the contact ID from the row's data attribute
+                var contactId = row.getAttribute("data-contact-id");
 
                 // Update the Firestore document with the edited values
-                contactsRef.doc(docId).update({
+                contactsRef.doc(contactId).update({
                     phone: phone,
                     lastName: lastName,
                     firstName: firstName
@@ -155,35 +270,6 @@
             // Inform the user that changes have been saved
             alert("Changes saved successfully!");
         }
-
-        // Function to add a new contact
-        function addContact() {
-            var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
-
-            // Add a new row to the table
-            var newRow = tableBody.insertRow(tableBody.rows.length);
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-
-            cell1.contentEditable = "true";
-            cell2.contentEditable = "true";
-            cell3.contentEditable = "true";
-
-            // Add the new contact to Firestore
-            contactsRef.add({
-                phone: "",
-                lastName: "",
-                firstName: ""
-            }).then((docRef) => {
-                // Set the Firestore document ID as a data attribute on the row
-                newRow.setAttribute("data-doc-id", docRef.id);
-                // Fetch contacts again after adding a new contact
-                fetchContacts();
-            });
-        }
-
-        // Function to save changes to Firestore (as before)
 
         // Fetch contacts when the page loads
         fetchContacts();

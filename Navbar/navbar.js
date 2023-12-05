@@ -20,6 +20,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div style="text-align: center;margin-bottom: -4px">שער</div>
                 </a>
             </div>
+            <div class="navbar-button" id="ContactsTableButtonLogoDiv">
+                <div style="margin-top: -13px;padding-top: 3px" class="highlight"></div>
+                <a style="text-decoration: none;color: black" href="./contacts.html">
+                    <div style="align-items: center;justify-content: center;display: flex">
+                        <img style="height: 35px" id="GateLogo" src="./Images/ContactsLogo.png" alt="אנשי קשר">
+                    </div>
+                    <div style="text-align: center;margin-bottom: -4px">אנשי קשר</div>
+                </a>
+            </div>
         </div>
     `;
 

@@ -168,52 +168,43 @@ function makeTablesEditable() {
   tables.forEach((table, tableIndex) => {
     const cells = table.getElementsByTagName('td');
     Array.from(cells).forEach((cell, cellIndex) => {
-      let tapCount = 0;
-      let debounceTimer;
-
       cell.setAttribute('id', `cell${tableIndex + 1}_${cellIndex + 1}`);
-
-      cell.addEventListener('mousedown', function (event) {
-        event.preventDefault(); // Prevent default behavior to avoid selection of text
-      });
-
-      cell.addEventListener('click', function () {
-        clearTimeout(debounceTimer);
-
-        if (tapCount === 5 || this.innerHTML.trim() === '') {
-          this.contentEditable = "true";
-          this.focus();
-
-          this.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault(); // Prevent default behavior of Enter key
-              this.contentEditable = "false";
-              handleCellEdit(this);
-              tapCount = 0; // Reset the tap count for the specific cell after successfully editing
-            }
-          });
-        }
-        if (this.innerHTML.trim() !== '') {
-          tapCount++;
-          if (tapCount === 5) {
-            this.style.border = "1px solid black";
-          }
-
-          // Reset the tap count after a short delay (e.g., 1 second)
-          debounceTimer = setTimeout(() => {
-            tapCount = 0;
-          }, 1000);
-        }
-      });
+      cell.addEventListener('mousedown', handleMouseDown);
     });
   });
 
-  // Function to handle cell edit (separate from the keydown event)
+  function handleMouseDown(event) {
+    event.preventDefault(); // Prevent default behavior to avoid selection of text
+    const cell = event.target;
+
+    if (cell.contentEditable === 'false' || cell.innerHTML.trim() === '') {
+      cell.contentEditable = "true";
+      cell.focus();
+
+      cell.addEventListener('keydown', handleKeyDown);
+
+      cell.addEventListener('blur', function onBlur() {
+        cell.removeEventListener('keydown', handleKeyDown);
+        cell.removeEventListener('blur', onBlur);
+      });
+    }
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent default behavior of Enter key
+      const cell = e.target;
+      cell.contentEditable = "false";
+      cell.blur(); // Trigger the blur event to remove the event listeners
+      handleCellEdit(cell);
+    }
+  }
+
   function handleCellEdit(cell) {
     let editedData = cell.innerHTML.trim();
     editedData = (editedData === '<br>' || editedData === '<br/>') ? '' : editedData;
     cell.innerHTML = editedData;
-    saveToFirestore();
+    saveToFirestore(); // Move the saveToFirestore call inside handleCellEdit
   }
 }
 

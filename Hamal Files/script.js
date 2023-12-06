@@ -63,6 +63,9 @@ function displayTables() {
         </table>
       </div>`;
   }).join("<br>");
+
+  // Make tables editable after displaying them
+  makeTablesEditable();
 }
 
 // Function to save edited content to Firestore
@@ -83,7 +86,7 @@ async function saveToFirestore() {
       console.log('Data saved to Firestore successfully.');
     });
 
-    await Promise.all(updatePromises);
+    // await Promise.all(updatePromises);
   } catch (error) {
     console.error('Error saving data to Firestore:', error);
   }
@@ -150,7 +153,6 @@ async function deleteTable(id, index) {
         }
       }
 
-      displayTables();
       makeTablesEditable();
 
       console.log("Updated tables array content after deletion:");
@@ -178,40 +180,16 @@ function makeTablesEditable() {
     const cell = event.target;
 
     if (cell.contentEditable === 'false' || cell.innerHTML.trim() === '') {
-      cell.contentEditable = "true";
+      cell.contentEditable = 'true';
       cell.focus();
 
-      cell.addEventListener('keydown', handleKeyDown);
-
       cell.addEventListener('blur', function onBlur() {
-        cell.removeEventListener('keydown', handleKeyDown);
         cell.removeEventListener('blur', onBlur);
+        cell.contentEditable = 'false'; // Set it back to false when the cell loses focus
       });
     }
   }
-
-  function handleKeyDown(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault(); // Prevent default behavior of Enter key
-      const cell = e.target;
-      cell.contentEditable = "false";
-      cell.blur(); // Trigger the blur event to remove the event listeners
-      handleCellEdit(cell);
-    }
-  }
-
-  function handleCellEdit(cell) {
-    let editedData = cell.innerHTML.trim();
-    editedData = (editedData === '<br>' || editedData === '<br/>') ? '' : editedData;
-    cell.innerHTML = editedData;
-    saveToFirestore(); // Move the saveToFirestore call inside handleCellEdit
-  }
 }
-
-document.addEventListener('touchstart', function () {
-  // Save the data to Firestore
-  saveToFirestore();
-});
 
 // Call makeTablesEditable when the DOM content is fully loaded
 document.addEventListener('DOMContentLoaded', async function () {
@@ -224,28 +202,30 @@ document.addEventListener('DOMContentLoaded', async function () {
     makeTablesEditable();
     console.log('Tables are now editable.');
   }, 500); // Adjust the delay time as needed
-});  
+});
 
 // Function to fetch and display tablesData from Firestore
 async function fetchAndDisplayTables() {
   try {
-      const tablesSnapshot = await db.collection('tables').doc('tablesData').get();
-      const tablesDataFromFirestore = tablesSnapshot.data()?.tablesData;
+    const docRef = db.collection('tables').doc('tablesData');
+
+    // Set up a listener for real-time updates
+    docRef.onSnapshot((doc) => {
+      const tablesDataFromFirestore = doc.data()?.tablesData;
 
       if (tablesDataFromFirestore) {
-          // Update tablesData without affecting the original array reference
-          tablesData.length = 0;
-          tablesData.push(...tablesDataFromFirestore);
-          displayTables();
-
-          // Show the addTableButtonContainer div after displaying tables
-          document.getElementById('addTableButtonContainer').style.display = 'block';
+        // Update tablesData without affecting the original array reference
+        tablesData.length = 0;
+        tablesData.push(...tablesDataFromFirestore);
+        displayTables();
+        document.getElementById('addTableButtonContainer').style.display = 'block';
       } else {
-          console.log('No data found in Firestore.');
+        console.log('No data found in Firestore.');
       }
+    });
   } catch (error) {
-      console.error('Error fetching data from Firestore:', error);
-    }
+    console.error('Error setting up real-time data listener:', error);
+  }
 }
 
 addTableButton.addEventListener("click", function () {

@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add event listener for the new rounded button
     const saveChangesButton = document.getElementById('saveButtonLogo');
     saveChangesButton.addEventListener('click', function () {
+        saveToFirestore();
         // Display the pop-up/modal with "Changes saved" message
         alert('השינויים נשמרו!');
     });

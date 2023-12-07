@@ -75,7 +75,13 @@ async function saveToFirestore() {
   try {
     const updatePromises = Array.from(tables).map(async (table, index) => {
       const cells = table.getElementsByTagName('td');
-      const data = Array.from(cells).map((cell) => cell.innerHTML);
+      const data = Array.from(cells).map((cell) => {
+        const cellContent = cell.innerHTML.trim(); // Trim to remove leading/trailing whitespaces
+
+        // Replace <br> with empty string if the cell content is an empty line
+        return cellContent === '<br>' ? '' : cellContent;
+      });
+
       tablesData[index].cellData = data;
 
       // Update the tablesData in Firestore

@@ -79,9 +79,13 @@ async function saveToFirestore() {
   tables.forEach((table, index) => {
     const cells = table.getElementsByTagName('td');
     const data = [];
+
     Array.from(cells).forEach((cell) => {
-      data.push(cell.innerHTML);
+      let cellContent = cell.innerHTML.trim();
+      cellContent = (cellContent === '<br>' || cellContent === '<br/>') ? '' : cellContent;
+      data.push(cellContent);
     });
+
     gateTablesData[index].cellData = data; // Update the cellData property in gateTablesData
   });
 

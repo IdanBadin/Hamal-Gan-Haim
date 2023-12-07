@@ -11,18 +11,12 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
         body {
+            height: fit-content;
+            min-height: 100vh;
             font-family: Arial, sans-serif;
             margin: 10px;
             padding: 0;
             background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-        }
-
-        .web-container {
-            background-color: transparent;
-            width: 100%;
-            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -137,7 +131,7 @@
     <title>Contacts Details</title>
 </head>
 <body>
-    <div class="web-container">
+    <!-- <div class="web-container"> -->
         <div class="contactsPageHeader">(גן חיים) רשימת אנשי קשר</div>
         <table id="contactsTable">
             <thead>
@@ -151,11 +145,11 @@
                 <!-- Data will be populated dynamically from Firebase using fetchContacts() function -->
             </tbody>
         </table>
-        <div style="display: flex;justify-content: flex-start;width: 100%;">
+        <div style="display: flex;justify-content: flex-start;width: 100%;margin-bottom: 150px;">
             <button style="margin-right: 10px;" id="addContactBtn" onclick="addContact()">הוסף שורה</button>
             <button id="saveChangesBtn" onclick="saveChanges()">שמור שינויים</button>
         </div>
-    </div>
+    <!-- </div> -->
 
     <script>
         // Firebase configuration
@@ -174,15 +168,15 @@
         var contactsRef = db.collection("contactsTable").doc("contactsData").collection("contacts");
 
         // Function to fetch and display contacts
-        function fetchContacts() {
+        function fetchContactsRealtime() {
             var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
             var loadingIndicator = document.createElement('p');
             loadingIndicator.textContent = 'Loading contacts...';
             loadingIndicator.className = 'loading-indicator';
             tableBody.appendChild(loadingIndicator);
 
-            // Fetch contacts and order them by numerical ID
-            contactsRef.orderBy('contactId').get().then((querySnapshot) => {
+            // Set up a real-time listener for changes in the database
+            contactsRef.orderBy('contactId').onSnapshot((querySnapshot) => {
                 tableBody.innerHTML = ""; // Clear existing rows
 
                 querySnapshot.forEach((doc) => {
@@ -217,16 +211,6 @@
         function addContact() {
             var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
 
-            // Add a new row to the table at the end
-            var newRow = tableBody.insertRow(-1);
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-
-            cell1.contentEditable = "true";
-            cell2.contentEditable = "true";
-            cell3.contentEditable = "true";
-
             // Fetch the maximum contactId from Firestore and increment it by 1
             contactsRef.orderBy('contactId', 'desc').limit(1).get().then((querySnapshot) => {
                 var newContactId = 1; // Default to 1 if there are no existing contacts
@@ -237,15 +221,25 @@
                     newContactId = maxContact.contactId + 1;
                 }
 
+                // Add a new row to the table at the end
+                var newRow = tableBody.insertRow(-1);
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+
+                cell1.contentEditable = "true";
+                cell2.contentEditable = "true";
+                cell3.contentEditable = "true";
+
+                // Set the contactId as a data attribute on the row
+                newRow.setAttribute("data-contact-id", newContactId);
+
                 // Add the new contact to Firestore with the incremented contactId
                 contactsRef.doc(newContactId.toString()).set({
                     phone: "",
                     lastName: "",
                     firstName: "",
                     contactId: newContactId
-                }).then(() => {
-                    // Set the contact ID as a data attribute on the row
-                    newRow.setAttribute("data-contact-id", newContactId);
                 });
             });
         }

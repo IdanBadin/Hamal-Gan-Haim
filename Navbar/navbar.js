@@ -49,19 +49,19 @@ document.addEventListener("DOMContentLoaded", function () {
     if (currentPage.includes('contacts.html')) {
         const saveChangesButton = document.querySelector('.SaveChangesButtonDiv');
         saveChangesButton.style.display = 'none';
-    } else {
-        // Update the active button based on the current page with a delay
-        setTimeout(function () {
-            const navbarButtons = document.querySelectorAll('.navbar-button');
-            navbarButtons.forEach(button => {
-                const buttonLink = button.querySelector('a').href;
-                if (currentPage.includes(buttonLink)) {
-                    button.classList.add('active');
-                    button.querySelector('.highlight').style.width = '100%';
-                }
-            });
-        }, 1000); // Adjust the delay as needed
     }
+
+    // Update the active button with highlighted line animation based on the current page with a delay
+    setTimeout(function () {
+        const navbarButtons = document.querySelectorAll('.navbar-button');
+        navbarButtons.forEach(button => {
+            const buttonLink = button.querySelector('a').href;
+            if (currentPage.includes(buttonLink)) {
+                button.classList.add('active');
+                button.querySelector('.highlight').style.width = '100%';
+            }
+        });
+    }, 1000); // Adjust the delay as needed
 
     // Add event listener for the save changes rounded button
     const saveChangesButton = document.getElementById('saveChangesButton');

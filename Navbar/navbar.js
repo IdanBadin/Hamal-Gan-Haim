@@ -40,9 +40,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const currentPage = window.location.href;
 
-    // Check if the user is on the contacts.html page and hide the roundedSaveChangesButton
+    // Check if the user is on the contacts.html page and hide the SaveChangesButtonDiv
     if (currentPage.includes('contacts.html')) {
-        const saveChangesButton = document.querySelector('.roundedSaveChangesButton');
+        const saveChangesButton = document.querySelector('.SaveChangesButtonDiv');
         saveChangesButton.style.display = 'none';
     } else {
         // Update the active button based on the current page with a delay

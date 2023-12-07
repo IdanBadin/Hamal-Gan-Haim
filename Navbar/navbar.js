@@ -38,6 +38,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Insert the navigation bar HTML into the body
     document.body.insertAdjacentHTML('afterbegin', navbarHtml);
 
+    // Changing font family in navbar
+    const bottomNavbar = document.getElementById("bottom-navbar");
+    bottomNavbar.style.fontFamily = "'Fredoka', sans-serif";
+
+    // Getting the current opened page href
     const currentPage = window.location.href;
 
     // Check if the user is on the contacts.html page and hide the SaveChangesButtonDiv

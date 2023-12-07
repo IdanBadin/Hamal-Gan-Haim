@@ -163,32 +163,58 @@ async function deleteTable(id, index) {
   }
 }
 
-// Function to make tables editable
+// Function to make tables editable + 5 taps on a cell that contains text in order to edit
 function makeTablesEditable() {
   const tables = document.querySelectorAll('.editableTable');
 
   tables.forEach((table, tableIndex) => {
     const cells = table.getElementsByTagName('td');
+    let activeCell = null; // Keep track of the currently active cell
+    let tapCount = 0;
+
     Array.from(cells).forEach((cell, cellIndex) => {
       cell.setAttribute('id', `cell${tableIndex + 1}_${cellIndex + 1}`);
+
       cell.addEventListener('mousedown', handleMouseDown);
+
+      function handleMouseDown(event) {
+        event.preventDefault(); // Prevent default behavior to avoid selection of text
+        const cell = event.target;
+
+        if (cell !== activeCell) {
+          // Reset tap count if tapping on a different cell
+          activeCell = cell;
+          tapCount = 1;
+        } else {
+          // Increment tap count if tapping on the same cell
+          tapCount++;
+        }
+
+        if (cell.contentEditable === 'false' || cell.innerHTML.trim() === '') {
+          cell.contentEditable = 'true';
+          cell.focus();
+
+          cell.addEventListener('blur', function onBlur() {
+            cell.removeEventListener('blur', onBlur);
+            cell.contentEditable = 'false'; // Set it back to false when the cell loses focus
+            activeCell = null; // Reset active cell after successful edit
+          });
+        } else {
+          // Decide whether to make it editable or not based on the tap count
+          if (tapCount === 5) {
+            cell.contentEditable = 'true';
+            cell.focus();
+
+            cell.addEventListener('blur', function onBlur() {
+              cell.removeEventListener('blur', onBlur);
+              cell.contentEditable = 'false'; // Set it back to false when the cell loses focus
+              activeCell = null; // Reset active cell after successful edit
+            });
+          }
+        }
+      }
     });
   });
-
-  function handleMouseDown(event) {
-    event.preventDefault(); // Prevent default behavior to avoid selection of text
-    const cell = event.target;
-
-    if (cell.contentEditable === 'false' || cell.innerHTML.trim() === '') {
-      cell.contentEditable = 'true';
-      cell.focus();
-
-      cell.addEventListener('blur', function onBlur() {
-        cell.removeEventListener('blur', onBlur);
-        cell.contentEditable = 'false'; // Set it back to false when the cell loses focus
-      });
-    }
-  }
 }
 
 // Call makeTablesEditable when the DOM content is fully loaded
@@ -204,7 +230,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }, 500); // Adjust the delay time as needed
 });
 
-// Function to fetch and display tablesData from Firestore
+// Function to fetch and display tablesData from Firestore live to all users
 async function fetchAndDisplayTables() {
   try {
     const docRef = db.collection('tables').doc('tablesData');

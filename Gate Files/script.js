@@ -68,6 +68,9 @@ function displayTables() {
         </table>
       </div>`;
   }).join("<br>");
+
+  // Make tables editable again after saved changes
+  makeTablesEditable();
 }
 
 // Function to save edited content to Firestore
@@ -127,41 +130,45 @@ async function deleteTable(id, index) {
   try {
     const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
 
-      if (confirmDelete) {
-        const tableIndex = index;
-        if (tableIndex > -1) {
-            // Remove table data from Firestore
-            await db.collection('gateTables').doc('GateTablesData').update({
-                gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
-            });
+    if (confirmDelete) {
+      const tableIndex = index;
 
-            // Remove table from the DOM
-            const tableElement = document.getElementById(id);
-            tableElement.parentNode.removeChild(tableElement);
+      if (tableIndex > -1) {
+        // Remove table data from Firestore
+        await db.collection('gateTables').doc('GateTablesData').update({
+          gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
+        });
 
-            // Remove table data from gateTablesData array
-            gateTablesData.splice(tableIndex, 1);
+        // Remove table from the DOM
+        const tableElement = document.getElementById(id);
 
-            console.log("Data saved to Firestore successfully.");
-
-            // Check if gateTablesData is empty and clear local storage
-            if (gateTablesData.length === 0) {
-                localStorage.clear();
-            }
+        // Check if the element exists before trying to remove it
+        if (tableElement) {
+          tableElement.parentNode.removeChild(tableElement);
         }
+        // Remove table data from gateTablesData array
+        gateTablesData.splice(tableIndex, 1);
 
-        displayTables();
-        makeTablesEditable();
+        console.log("Data saved to Firestore successfully.");
 
-        console.log("Updated gateTables array content after deletion:");
-        console.log(gateTablesData);
+        // Check if gateTablesData is empty and clear local storage
+        if (gateTablesData.length === 0) {
+          localStorage.clear();
+        }
       }
+
+      displayTables();
+      makeTablesEditable();
+
+      console.log("Updated gateTables array content after deletion:");
+      console.log(gateTablesData);
+    }
   } catch (error) {
-      console.error('Error deleting table:', error);
+    console.error('Error deleting table:', error);
   }
 }
 
-// Function to make tables editable
+// Function to make tables editable + 5 taps on a cell that contains text in order to edit
 function makeTablesEditable() {
   const tables = document.querySelectorAll('.editableTable');
 
@@ -187,15 +194,6 @@ function makeTablesEditable() {
           } else {
             this.contentEditable = "true";
             this.focus();
-
-            this.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent default behavior of Enter key
-                this.contentEditable = "false";
-                handleCellEdit(this);
-                tapCount = 0; // Reset the tap count for the specific cell after successfully editing
-              }
-            });
           }
         }
 
@@ -292,11 +290,6 @@ function makeTablesEditable() {
   }
 }
 
-document.addEventListener('touchstart', function () {
-  // Save the data to Firestore
-  saveToFirestore();
-});
-
 // Call makeTablesEditable when the DOM content is fully loaded
 document.addEventListener('DOMContentLoaded', async function () {
   console.log('DOM content loaded. Fetching and displaying tables...');
@@ -310,25 +303,27 @@ document.addEventListener('DOMContentLoaded', async function () {
   }, 500); // Adjust the delay time as needed
 });  
 
-// Function to fetch and display gateTablesData from Firestore
+// Function to fetch and display gateTablesData from Firestore live to all users
 async function fetchAndDisplayTables() {
   try {
-      const tablesSnapshot = await db.collection('gateTables').doc('GateTablesData').get();
-      const gateTablesDataFromFirestore = tablesSnapshot.data()?.gateTablesData;
+    const tablesSnapshot = await db.collection('gateTables').doc('GateTablesData');
+    
+    // Use onSnapshot to listen for real-time updates
+    tablesSnapshot.onSnapshot((doc) => {
+      const gateTablesDataFromFirestore = doc.data()?.gateTablesData;
 
       if (gateTablesDataFromFirestore) {
-          // Update gateTablesData without affecting the original array reference
-          gateTablesData.length = 0;
-          gateTablesData.push(...gateTablesDataFromFirestore);
-          displayTables();
-
-          // Show the addTableButtonContainer div after displaying tables
-          document.getElementById('addTableButtonContainer').style.display = 'block';
+        // Update gateTablesData without affecting the original array reference
+        gateTablesData.length = 0;
+        gateTablesData.push(...gateTablesDataFromFirestore);
+        displayTables();
+        document.getElementById('addTableButtonContainer').style.display = 'block';
       } else {
-          console.log('No data found in Firestore.');
+        console.log('No data found in Firestore.');
       }
+    });
   } catch (error) {
-      console.error('Error fetching data from Firestore:', error);
+    console.error('Error fetching data from Firestore:', error);
   }
 }
 

@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Create the navigation bar HTML
     const navbarHtml = `
         <div id="bottom-navbar">
-            <div class="roundedSaveChangesButton">
-                <img id="saveButtonLogo" style="height: 55px" src="./Images/yes.png" alt="שמור שינויים">
+            <div class="SaveChangesButtonDiv">
+                <img id="saveChangesButton" style="height: 55px" src="./Images/yes.png" alt="שמור שינויים">
             </div>
             <div class="navbar-button" id="HamalTableButtonLogoDiv">
                 <div style="margin-top: -13px;padding-top: 3px" class="highlight"></div>
@@ -58,11 +58,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 1000); // Adjust the delay as needed
     }
 
-    // Add event listener for the new rounded button
-    const saveChangesButton = document.getElementById('saveButtonLogo');
-    saveChangesButton.addEventListener('click', function () {
-        saveToFirestore();
-        // Display the pop-up/modal with "Changes saved" message
-        alert('השינויים נשמרו!');
+    // Add event listener for the save changes rounded button
+    const saveChangesButton = document.getElementById('saveChangesButton');
+    saveChangesButton.addEventListener('click', async function () {
+        try {
+            // Run saveToFirestore and wait for it to complete
+            await saveToFirestore();
+            
+            // Display the pop-up with "!השינויים נשמרו בהצלחה" message
+            alert('השינויים נשמרו בהצלחה!');
+        } catch (error) {
+            // Handle the error appropriately (e.g., display an error message)
+            console.error('Error saving changes:', error);
+        }
     });
 });

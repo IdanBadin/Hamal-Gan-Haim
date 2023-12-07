@@ -161,7 +161,7 @@ table {
     transition: width 0.3s ease 0.5s; /* Add a small delay for the initial width */
 }
 
-.roundedSaveChangesButton {
+.SaveChangesButtonDiv {
     position: fixed;
     right: 20px;
     margin-bottom: 180px;

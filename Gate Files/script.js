@@ -76,28 +76,35 @@ function displayTables() {
 // Function to save edited content to Firestore
 async function saveToFirestore() {
   const tables = document.querySelectorAll('.editableTable');
-  tables.forEach((table, index) => {
-    const cells = table.getElementsByTagName('td');
-    const data = [];
-
-    Array.from(cells).forEach((cell) => {
-      let cellContent = cell.innerHTML.trim();
-      cellContent = (cellContent === '<br>' || cellContent === '<br/>') ? '' : cellContent;
-      data.push(cellContent);
-    });
-
-    gateTablesData[index].cellData = data; // Update the cellData property in gateTablesData
-  });
 
   try {
-    // Update gateTablesData in Firestore
-    await db.collection('gateTables').doc('GateTablesData').set({
-      gateTablesData
-    });
+    // Use Promise.all to wait for all promises (saves) to complete
+    await Promise.all(Array.from(tables).map(async (table, index) => {
+      const cells = table.getElementsByTagName('td');
+      const data = [];
 
-    console.log('Data saved to Firestore successfully.');
+      Array.from(cells).forEach((cell) => {
+        let cellContent = cell.innerHTML.trim();
+        cellContent = (cellContent === '<br>' || cellContent === '<br/>') ? '' : cellContent;
+        data.push(cellContent);
+      });
+
+      gateTablesData[index].cellData = data; // Update the cellData property in gateTablesData
+
+      // Update gateTablesData in Firestore
+      await db.collection('gateTables').doc('GateTablesData').set({
+        gateTablesData
+      });
+
+      console.log('Saving Data to Firestore...');
+    }));
+
+    // If all updates are successful, log a success message
+    console.log('All data saved to Firestore successfully.');
   } catch (error) {
     console.error('Error saving data to Firestore:', error);
+    // Throw the error again to propagate it to the calling code
+    throw error;
   }
 }
 

@@ -73,12 +73,13 @@ async function saveToFirestore() {
   const tables = document.querySelectorAll('.editableTable');
 
   try {
-    const updatePromises = Array.from(tables).map(async (table, index) => {
+    // Use Promise.all to wait for all promises (saves) to complete
+    await Promise.all(Array.from(tables).map(async (table, index) => {
       const cells = table.getElementsByTagName('td');
       const data = Array.from(cells).map((cell) => {
         const cellContent = cell.innerHTML.trim(); // Trim to remove leading/trailing whitespaces
 
-        // Replace <br> with empty string if the cell content is an empty line
+        // Replace <br> with an empty string if the cell content is an empty line
         return cellContent === '<br>' ? '' : cellContent;
       });
 
@@ -89,12 +90,15 @@ async function saveToFirestore() {
         tablesData
       });
 
-      console.log('Data saved to Firestore successfully.');
-    });
+      console.log('Saving data to Firestore...');
+    }));
 
-    // await Promise.all(updatePromises);
+    // If all updates are successful, log a success message
+    console.log('All data saved to Firestore successfully.');
   } catch (error) {
     console.error('Error saving data to Firestore:', error);
+    // Throw the error again to propagate it to the calling code
+    throw error;
   }
 }
 

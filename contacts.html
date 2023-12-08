@@ -64,6 +64,8 @@
         input[type="text"] {
             width: 100%;
             box-sizing: border-box;
+            height: 30px;
+            font-size: 16px;
         }
 
         #addContactBtn, #saveChangesBtn {
@@ -104,7 +106,6 @@
             width: fit-content;
         }
 
-        /* Add this style for the active state */
         .navbar-button.active .highlight {
             width: 100%;
             height: 4px;
@@ -119,38 +120,38 @@
         .highlight {
             position: absolute;
             border-radius: 10px;
-            /* bottom: 0; */
             left: 0;
             width: 0;
             height: 4px;
             background-color: #BA704F;
-            transition: width 0.3s ease 0.5s; /* Add a small delay for the initial width */
+            transition: width 0.3s ease 0.5s;
         }
-
     </style>
     <title>Contact's Gan Haim</title>
 </head>
 <body>
-    <!-- <div class="web-container"> -->
-        <div class="contactsPageHeader">(גן חיים) רשימת אנשי קשר</div>
-        <table id="contactsTable">
-            <thead>
-                <tr>
-                    <th>טלפון</th>
-                    <th>שם משפחה</th>
-                    <th>שם פרטי</th>
-                    <th>מס׳</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data will be populated dynamically from Firebase using fetchContacts() function -->
-            </tbody>
-        </table>
-        <div style="display: flex;justify-content: flex-start;width: 100%;margin-bottom: 150px;">
-            <button style="margin-right: 10px;" id="addContactBtn" onclick="addContact()">הוסף שורה</button>
-            <button id="saveChangesBtn" onclick="saveChanges()">שמור שינויים</button>
-        </div>
-    <!-- </div> -->
+    <div class="contactsPageHeader">(גן חיים) רשימת אנשי קשר</div>
+    <div style="margin-top: 20px; display: flex; justify-content: center;width: 350px;height: fit-content;">
+        <input style="direction: rtl;" type="text" id="searchInput" oninput="searchContacts()" placeholder="חפש איש קשר...">
+    </div>
+    <div id="noResultsMessage" style="display: none;font-size: 22px;margin-top: 10px;font-weight: bold;">אין תוצאות מתאימות</div>
+    <table id="contactsTable">
+        <thead>
+            <tr>
+                <th>טלפון</th>
+                <th>שם משפחה</th>
+                <th>שם פרטי</th>
+                <th>מס׳</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated dynamically from Firebase using fetchContacts() function -->
+        </tbody>
+    </table>
+    <div style="display: flex;justify-content: flex-start;width: 100%;margin-bottom: 150px;">
+        <button style="margin-right: 10px;" id="addContactBtn" onclick="addContact()">הוסף שורה</button>
+        <button id="saveChangesBtn" onclick="saveChanges()">שמור שינויים</button>
+    </div>
 
     <script>
         // Firebase configuration
@@ -168,7 +169,23 @@
         var db = firebase.firestore();
         var contactsRef = db.collection("contactsTable").doc("contactsData").collection("contacts");
 
-        // Update the fetchContactsRealtime function
+        // Additional variable to store the original order of contacts
+        var originalContacts = [];
+
+        // Fetch contacts when the page loads and store the original order
+        function fetchContactsInitial() {
+            contactsRef.orderBy('contactId').get().then((querySnapshot) => {
+                originalContacts = [];
+                querySnapshot.forEach((doc) => {
+                    originalContacts.push(doc.data());
+                });
+
+                // Initial fetch
+                fetchContactsRealtime();
+            });
+        }
+
+        // Function to fetch contacts in real-time
         function fetchContactsRealtime() {
             var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
             var loadingIndicator = document.createElement('p');
@@ -186,8 +203,6 @@
                     var cell1 = newRow.insertCell(0);
                     var cell2 = newRow.insertCell(1);
                     var cell3 = newRow.insertCell(2);
-
-                    // Add a new cell for the ID column
                     var cellId = newRow.insertCell(3);
 
                     cell1.contentEditable = "true";
@@ -212,6 +227,92 @@
                     tableBody.removeChild(loadingIndicator);
                 }
             });
+        }
+
+        // Function to search contacts and display matching ones
+        function searchContacts() {
+            var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
+            var searchInput = document.getElementById("searchInput").value.trim().toLowerCase();
+
+            // Check if the search input is empty
+            if (searchInput === "") {
+                // If the search input is empty, restore the original order
+                renderContacts(originalContacts);
+                return;
+            }
+
+            // Set up queries to filter contacts based on the search input for both lastName and firstName
+            var queryLastName = contactsRef.where('lastName', '>=', searchInput)
+                                        .where('lastName', '<=', searchInput + '\uf8ff')
+                                        .orderBy('lastName');
+
+            var queryFirstName = contactsRef.where('firstName', '>=', searchInput)
+                                            .where('firstName', '<=', searchInput + '\uf8ff')
+                                            .orderBy('firstName');
+
+            // Fetch the matching contacts for both queries
+            Promise.all([queryLastName.get(), queryFirstName.get()])
+                .then(([querySnapshotLastName, querySnapshotFirstName]) => {
+                    // Combine the results from both queries
+                    var matchingContacts = [];
+
+                    querySnapshotLastName.forEach((doc) => {
+                        matchingContacts.push(doc.data());
+                    });
+
+                    querySnapshotFirstName.forEach((doc) => {
+                        matchingContacts.push(doc.data());
+                    });
+
+                    // Remove duplicates by using a Set and convert back to an array
+                    matchingContacts = Array.from(new Set(matchingContacts.map(JSON.stringify)), JSON.parse);
+
+                    // Render the matching contacts
+                    renderContacts(matchingContacts);
+                })
+                .catch((error) => {
+                    console.error("Error searching contacts:", error);
+                });
+        }
+
+        // Function to render contacts to the table body
+        function renderContacts(contacts) {
+            var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
+            var noResultsMessage = document.getElementById("noResultsMessage");
+
+            // Clear existing rows
+            tableBody.innerHTML = "";
+
+            if (contacts.length > 0) {
+                // If there are matching contacts, render them in the table
+                noResultsMessage.style.display = "none";
+                contacts.forEach((contact) => {
+                    var newRow = tableBody.insertRow(tableBody.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    var cell3 = newRow.insertCell(2);
+                    var cellId = newRow.insertCell(3);
+
+                    cell1.contentEditable = "true";
+                    cell2.contentEditable = "true";
+                    cell3.contentEditable = "true";
+
+                    cell1.textContent = contact.phone;
+                    cell2.textContent = contact.lastName;
+                    cell3.textContent = contact.firstName;
+
+                    // Set the Firestore document ID as a data attribute on the row
+                    newRow.setAttribute("data-doc-id", contact.docId);
+                    // Set the contact ID as a data attribute on the row
+                    newRow.setAttribute("data-contact-id", contact.contactId);
+
+                    // Set the ID column value
+                    cellId.textContent = contact.contactId;
+                });
+            } else {
+                // If there are no matching contacts, display the no results message
+                noResultsMessage.style.display = "block";
+            }
         }
 
         // Function to add a new contact
@@ -293,8 +394,8 @@
                 });
         }
 
-        // Fetch contacts when the page loads
-        fetchContactsRealtime();
+        // Fetch contacts when the page initially loads
+        fetchContactsInitial();
     </script>
 </body>
 </html>

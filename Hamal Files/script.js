@@ -83,14 +83,19 @@ async function saveToFirestore() {
         return cellContent === '<br>' ? '' : cellContent;
       });
 
-      tablesData[index].cellData = data;
+      const originalData = tablesData[index].cellData || [];
 
-      // Update the tablesData in Firestore
-      await db.collection('tables').doc('tablesData').set({
-        tablesData
-      });
+      // Check if the data has changed before updating Firestore
+      if (!arraysAreEqual(data, originalData)) {
+        tablesData[index].cellData = data;
 
-      console.log('Saving data to Firestore...');
+        // Update the tablesData in Firestore
+        await db.collection('tables').doc('tablesData').set({
+          tablesData
+        });
+
+        console.log(`Saving data to Firestore for table ${index + 1}...`);
+      }
     }));
 
     // If all updates are successful, log a success message
@@ -100,6 +105,21 @@ async function saveToFirestore() {
     // Throw the error again to propagate it to the calling code
     throw error;
   }
+}
+
+// Function to check if two arrays are equal (Used in the saveToFirestore function to improve performance and speed of data saving to firestore database)
+function arraysAreEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 // Function to fetch tablesData from Firestore

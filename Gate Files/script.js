@@ -89,14 +89,19 @@ async function saveToFirestore() {
         data.push(cellContent);
       });
 
-      gateTablesData[index].cellData = data; // Update the cellData property in gateTablesData
+      const originalData = gateTablesData[index].cellData || [];
 
-      // Update gateTablesData in Firestore
-      await db.collection('gateTables').doc('GateTablesData').set({
-        gateTablesData
-      });
+      // Check if the data has changed before updating Firestore
+      if (!arraysAreEqual(data, originalData)) {
+        gateTablesData[index].cellData = data; // Update the cellData property in gateTablesData
 
-      console.log('Saving Data to Firestore...');
+        // Update gateTablesData in Firestore
+        await db.collection('gateTables').doc('GateTablesData').set({
+          gateTablesData
+        });
+
+        console.log(`Saving Data to Firestore for table ${index + 1}...`);
+      }
     }));
 
     // If all updates are successful, log a success message
@@ -106,6 +111,21 @@ async function saveToFirestore() {
     // Throw the error again to propagate it to the calling code
     throw error;
   }
+}
+
+// Function to check if two arrays are equal (Used in the saveToFirestore function to improve performance and speed of data saving to firestore database)
+function arraysAreEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 // Function to fetch gateTablesData from Firestore
@@ -241,10 +261,10 @@ function makeTablesEditable() {
       'משה שרביט', 'אתגר מרדכי', 'אמיר אבידור', 'יובל קרנר', 'זיו ליטמן',
       'אורן טאוב', 'דורון אבן', 'עמית קליינמן', 'ישראל שדה', 'עופר מורשטיין', 'אבי חן', 'אייל וייסבורד', 'ישראל חן'
     ];
-
+  
     const listContainer = document.createElement('div');
     listContainer.className = 'people-list-container';
-
+  
     // Adjust the styling for the list container
     listContainer.style.backgroundColor = 'whitesmoke';
     listContainer.style.border = '1px solid black';
@@ -253,12 +273,23 @@ function makeTablesEditable() {
     listContainer.style.width = '235px'; // Set the width to a smaller value
     listContainer.style.maxHeight = '400px'; // Set a fixed height for the container
     listContainer.style.overflowY = 'auto'; // Enable vertical scrolling
-
+  
+    // Calculate the position relative to the viewport
+    const rect = cell.getBoundingClientRect();
+    const scrollY = window.scrollY || window.pageYOffset;
+    const top = rect.bottom + scrollY;
+    const left = rect.left;
+  
+    // Position the list container below the clicked cell
+    listContainer.style.position = 'absolute';
+    listContainer.style.top = top + 'px';
+    listContainer.style.left = left + 'px';
+  
     // Create a list of buttons for each person
     peopleList.forEach(person => {
       const button = document.createElement('button');
       button.textContent = person;
-
+  
       // Adjust the styling for each button
       button.style.width = '100%';
       button.style.height = '40px';
@@ -269,28 +300,23 @@ function makeTablesEditable() {
       button.style.cursor = 'pointer';
       button.style.fontSize = '20px'; // Adjust the font size
       button.style.fontWeight = 'bold'; // Adjust the font size
-
+  
       button.addEventListener('click', () => {
         cell.innerHTML = person;
         listContainer.parentNode.removeChild(listContainer);
-        saveToFirestore();
+        // Commenting out the saveToFirestore() call to prevent saving to Firebase
+        // saveToFirestore();
       });
-
+  
       listContainer.appendChild(button);
     });
-
-    // Position the list container below the clicked cell
-    const rect = cell.getBoundingClientRect();
-    listContainer.style.position = 'absolute';
-    listContainer.style.top = rect.bottom + 'px';
-    listContainer.style.left = rect.left + 'px';
-
+  
     // Add the list container to the body
     document.body.appendChild(listContainer);
-
+  
     // Close the list container when clicking or touching anywhere on the website
     document.addEventListener('pointerdown', handleWebsiteInteraction);
-
+  
     // Function to handle clicks or touches anywhere on the website
     function handleWebsiteInteraction(event) {
       if (listContainer && listContainer.parentNode && !listContainer.contains(event.target) && event.target !== cell) {

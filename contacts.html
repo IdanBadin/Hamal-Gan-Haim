@@ -254,6 +254,7 @@
         // Function to save changes to Firestore
         function saveChanges() {
             var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
+            var updatePromises = []; // Array to store update promises
 
             // Iterate through each row in the table
             for (var i = 0; i < tableBody.rows.length; i++) {
@@ -267,16 +268,29 @@
                 // Get the contact ID from the row's data attribute
                 var contactId = row.getAttribute("data-contact-id");
 
-                // Update the Firestore document with the edited values
-                contactsRef.doc(contactId).update({
-                    phone: phone,
-                    lastName: lastName,
-                    firstName: firstName
-                });
+                // Update the Firestore document with the edited values and store the promise
+                updatePromises.push(
+                    contactsRef.doc(contactId).update({
+                        phone: phone,
+                        lastName: lastName,
+                        firstName: firstName
+                    })
+                );
             }
 
-            // Inform the user that changes have been saved
-            alert("השינויים נשמרו!");
+            // Wait for all update promises to complete
+            Promise.all(updatePromises)
+                .then(() => {
+                    // Log a message to the console after changes have been saved
+                    console.log("Changes have been saved to the database successfully.");
+
+                    // Inform the user that changes have been saved
+                    alert("השינויים נשמרו!");
+                })
+                .catch((error) => {
+                    console.error("Error saving changes:", error);
+                    alert("שגיאה בשמירת השינויים. אנא נסה שוב.");
+                });
         }
 
         // Fetch contacts when the page loads

@@ -158,35 +158,47 @@ async function deleteTable(id, index) {
     if (confirmDelete) {
       const tableIndex = index;
       if (tableIndex > -1) {
-        await db.runTransaction(async (transaction) => {
-          const docRef = db.collection('tables').doc('tablesData');
-          const doc = await transaction.get(docRef);
+        // Add the fade-out class to the table element
+        const tableElement = document.getElementById(id);
+        if (tableElement) {
+          tableElement.classList.add('fade-out');
+        }
 
-          // Remove table data from Firestore
-          transaction.update(docRef, {
-            tablesData: firebase.firestore.FieldValue.arrayRemove(tablesData[tableIndex])
+        // Wait for the fade-out animation to complete (use setTimeout or transitionend event)
+        // Then remove the table from the DOM and update Firestore
+        setTimeout(async () => {
+          // Use Firestore transaction to ensure data consistency
+          await db.runTransaction(async (transaction) => {
+            const docRef = db.collection('tables').doc('tablesData');
+            const doc = await transaction.get(docRef);
+
+            // Remove table data from Firestore
+            transaction.update(docRef, {
+              tablesData: firebase.firestore.FieldValue.arrayRemove(tablesData[tableIndex])
+            });
+
+            // Remove table data from tablesData array
+            tablesData.splice(tableIndex, 1);
           });
 
-          // Remove table data from tablesData array
-          tablesData.splice(tableIndex, 1);
-        });
+          // Remove table from the DOM
+          if (tableElement && tableElement.parentNode) {
+            tableElement.parentNode.removeChild(tableElement);
+          }
 
-        // Remove table from the DOM
-        const tableElement = document.getElementById(id);
-        tableElement.parentNode.removeChild(tableElement);
+          console.log("Data saved to Firestore successfully.");
 
-        console.log("Data saved to Firestore successfully.");
+          // Check if tablesData is empty and clear local storage
+          if (tablesData.length === 0) {
+            localStorage.clear();
+          }
 
-        // Check if tablesData is empty and clear local storage
-        if (tablesData.length === 0) {
-          localStorage.clear();
-        }
+          makeTablesEditable();
+
+          console.log("Updated tables array content after deletion:");
+          console.log(tablesData);
+        }, 500); // Adjust the delay to match the duration of the CSS transition
       }
-
-      makeTablesEditable();
-
-      console.log("Updated tables array content after deletion:");
-      console.log(tablesData);
     }
   } catch (error) {
     console.error('Error deleting table:', error);

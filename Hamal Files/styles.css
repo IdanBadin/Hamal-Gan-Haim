@@ -177,3 +177,9 @@ table {
     display: flex;
     justify-content: flex-end;
 }
+
+.fade-out {
+    transform: scaleX(0);
+    transform-origin: bottom;
+    transition: transform 0.5s ease-in-out; /* Adjust the duration and timing function as needed */
+}

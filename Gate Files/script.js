@@ -165,34 +165,41 @@ async function deleteTable(id, index) {
       const tableIndex = index;
 
       if (tableIndex > -1) {
-        // Remove table data from Firestore
-        await db.collection('gateTables').doc('GateTablesData').update({
-          gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
-        });
-
-        // Remove table from the DOM
+        // Add the fade-out class to the table element
         const tableElement = document.getElementById(id);
-
-        // Check if the element exists before trying to remove it
         if (tableElement) {
-          tableElement.parentNode.removeChild(tableElement);
+          tableElement.classList.add('fade-out');
         }
-        // Remove table data from gateTablesData array
-        gateTablesData.splice(tableIndex, 1);
 
-        console.log("Data saved to Firestore successfully.");
+        // Wait for the fade-out animation to complete (use setTimeout or transitionend event)
+        // Then remove the table from the DOM
+        setTimeout(() => {
+          if (tableElement && tableElement.parentNode) {
+            tableElement.parentNode.removeChild(tableElement);
+          }
 
-        // Check if gateTablesData is empty and clear local storage
-        if (gateTablesData.length === 0) {
-          localStorage.clear();
-        }
+          // Remove table data from Firestore
+          db.collection('gateTables').doc('GateTablesData').update({
+            gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
+          });
+
+          // Remove table data from gateTablesData array
+          gateTablesData.splice(tableIndex, 1);
+
+          console.log("Data saved to Firestore successfully.");
+
+          // Check if gateTablesData is empty and clear local storage
+          if (gateTablesData.length === 0) {
+            localStorage.clear();
+          }
+
+          displayTables();
+          makeTablesEditable();
+
+          console.log("Updated gateTables array content after deletion:");
+          console.log(gateTablesData);
+        }, 500); // Adjust the delay to match the duration of the CSS transition
       }
-
-      displayTables();
-      makeTablesEditable();
-
-      console.log("Updated gateTables array content after deletion:");
-      console.log(gateTablesData);
     }
   } catch (error) {
     console.error('Error deleting table:', error);
@@ -259,7 +266,7 @@ function makeTablesEditable() {
       'גל פאר', 'רן ראובני', 'ערן אבנון', 'אלון מאור', 'מושיק ברזילי',
       'אלי דפס', 'דני להב', 'ערן אבידור', 'עמוס קורן', 'נבות מרזל',
       'משה שרביט', 'אתגר מרדכי', 'אמיר אבידור', 'יובל קרנר', 'זיו ליטמן',
-      'אורן טאוב', 'דורון אבן', 'עמית קליינמן', 'ישראל שדה', 'עופר מורשטיין', 'אבי חן', 'אייל וייסבורד', 'ישראל חן'
+      'אורן טאוב', 'דורון אבן', 'עמית קליינמן', 'ישראל שדה', 'עופר מורשטיין', 'אבי חן', 'אייל וייסבורד', 'ישראל חן', "", "", ""
     ];
   
     const listContainer = document.createElement('div');
@@ -311,10 +318,25 @@ function makeTablesEditable() {
       listContainer.appendChild(button);
     });
   
-    // Add the list container to the body
     document.body.appendChild(listContainer);
   
-    // Close the list container when clicking or touching anywhere on the website
+    // Check if the list container goes beyond the viewport's bottom
+    const listContainerRect = listContainer.getBoundingClientRect();
+    const bottomOverflow = listContainerRect.bottom - window.innerHeight;
+  
+    // If the list goes beyond the bottom, scroll the page to make it fully visible
+    if (bottomOverflow > 0) {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const newScrollY = scrollY + bottomOverflow + 10; // Adjust the value as needed
+  
+      // Use smooth scrolling if available, otherwise instant scrolling
+      if ('scrollBehavior' in document.documentElement.style) {
+        window.scrollTo({ top: newScrollY, behavior: 'smooth' });
+      } else {
+        window.scrollTo(0, newScrollY);
+      }
+    }
+  
     document.addEventListener('pointerdown', handleWebsiteInteraction);
   
     // Function to handle clicks or touches anywhere on the website

@@ -432,28 +432,41 @@ function getCurrentDateFormatted() {
 }
 
 // Function to scroll to current date table on website
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  console.log('DOM content loaded. Fetching and displaying tables...');
+
+  // Wait for the fetchAndDisplayTables function to complete
+  await fetchAndDisplayTables();
+
+  console.log('Tables fetched and displayed. Making tables editable...');
+
+  // Introduce a slight delay before making tables editable
+  setTimeout(() => {
+    makeTablesEditable();
+    console.log('Tables are now editable.');
+
+    // Now, scroll to the anchor after all tables have loaded
+    scrollToAnchor();
+  }, 500); // Adjust the delay time as needed
+});
+
+// Function to scroll to the anchor (Current date table)
+function scrollToAnchor() {
   var currentDate = getCurrentDateFormatted();
   console.log("The current date is: " + currentDate);
 
-  // Function to scroll to the anchor
-  function scrollToAnchor() {
-    var anchor = document.getElementById(currentDate);
+  var anchor = document.getElementById(currentDate);
 
-    if (anchor) {
-      if ('scrollBehavior' in document.documentElement.style) {
-        anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        anchor.scrollIntoView(true);
-      }
+  if (anchor) {
+    if ('scrollBehavior' in document.documentElement.style) {
+      anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-      console.log("Element with ID " + currentDate + " not found.");
+      anchor.scrollIntoView(true);
     }
+  } else {
+    console.log("Element with ID " + currentDate + " not found.");
   }
-
-  // Scroll after a short delay to allow time for the tables to load
-  setTimeout(scrollToAnchor, 1500); // Adjust the delay as needed
-});
+}
 
 function getCurrentHebrewDate() {
   const daysOfWeekHebrew = [

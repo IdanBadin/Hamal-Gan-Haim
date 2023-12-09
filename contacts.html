@@ -61,11 +61,13 @@
             cursor: pointer;
         }
 
+        /* Search Input */
         input[type="text"] {
             width: 100%;
             box-sizing: border-box;
             height: 30px;
             font-size: 16px;
+            font-family: 'Fredoka', sans-serif;
         }
 
         #addContactBtn, #saveChangesBtn {
@@ -189,7 +191,8 @@
         function fetchContactsRealtime() {
             var tableBody = document.getElementById("contactsTable").getElementsByTagName('tbody')[0];
             var loadingIndicator = document.createElement('p');
-            loadingIndicator.textContent = 'Loading contacts...';
+            loadingIndicator.style.direction = 'rtl';
+            loadingIndicator.textContent = 'טוען אנשי קשר...';
             loadingIndicator.className = 'loading-indicator';
             tableBody.appendChild(loadingIndicator);
 

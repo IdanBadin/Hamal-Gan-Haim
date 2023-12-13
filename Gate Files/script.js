@@ -157,52 +157,70 @@ function getDefaultCellData() {
 }
 
 // Updated deleteTable function
+let deleteTapCounts = {}; // Object to keep track of tap counts for each table
+
 async function deleteTable(id, index) {
-  try {
-    const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
+  // Initialize tap count for the table if not already done
+  if (!deleteTapCounts[id]) {
+    deleteTapCounts[id] = 0;
+  }
 
-    if (confirmDelete) {
-      const tableIndex = index;
+  // Increment the tap count
+  deleteTapCounts[id]++;
 
-      if (tableIndex > -1) {
-        // Add the fade-out class to the table element
-        const tableElement = document.getElementById(id);
-        if (tableElement) {
-          tableElement.classList.add('fade-out');
+  // Check if the tap count has reached 10
+  if (deleteTapCounts[id] === 10) {
+    try {
+      const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
+
+      if (confirmDelete) {
+        const tableIndex = index;
+
+        if (tableIndex > -1) {
+          // Add the fade-out class to the table element
+          const tableElement = document.getElementById(id);
+          if (tableElement) {
+            tableElement.classList.add('fade-out');
+          }
+
+          // Wait for the fade-out animation to complete (use setTimeout or transitionend event)
+          // Then remove the table from the DOM
+          setTimeout(() => {
+            if (tableElement && tableElement.parentNode) {
+              tableElement.parentNode.removeChild(tableElement);
+            }
+
+            // Remove table data from Firestore
+            db.collection('gateTables').doc('GateTablesData').update({
+              gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
+            });
+
+            // Remove table data from gateTablesData array
+            gateTablesData.splice(tableIndex, 1);
+
+            console.log("Data saved to Firestore successfully.");
+
+            // Check if gateTablesData is empty and clear local storage
+            if (gateTablesData.length === 0) {
+              localStorage.clear();
+            }
+
+            displayTables();
+            makeTablesEditable();
+
+            console.log("Updated gateTables array content after deletion:");
+            console.log(gateTablesData);
+          }, 500); // Adjust the delay to match the duration of the CSS transition
         }
-
-        // Wait for the fade-out animation to complete (use setTimeout or transitionend event)
-        // Then remove the table from the DOM
-        setTimeout(() => {
-          if (tableElement && tableElement.parentNode) {
-            tableElement.parentNode.removeChild(tableElement);
-          }
-
-          // Remove table data from Firestore
-          db.collection('gateTables').doc('GateTablesData').update({
-            gateTablesData: firebase.firestore.FieldValue.arrayRemove(gateTablesData[tableIndex])
-          });
-
-          // Remove table data from gateTablesData array
-          gateTablesData.splice(tableIndex, 1);
-
-          console.log("Data saved to Firestore successfully.");
-
-          // Check if gateTablesData is empty and clear local storage
-          if (gateTablesData.length === 0) {
-            localStorage.clear();
-          }
-
-          displayTables();
-          makeTablesEditable();
-
-          console.log("Updated gateTables array content after deletion:");
-          console.log(gateTablesData);
-        }, 500); // Adjust the delay to match the duration of the CSS transition
       }
+
+      // Reset the tap count after attempting deletion
+      delete deleteTapCounts[id];
+    } catch (error) {
+      console.error('Error deleting table:', error);
     }
-  } catch (error) {
-    console.error('Error deleting table:', error);
+  } else {
+    console.log(`Tap count for table ${id}: ${deleteTapCounts[id]}`);
   }
 }
 

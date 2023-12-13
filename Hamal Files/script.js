@@ -151,57 +151,75 @@ function getDefaultCellData() {
 }
 
 // Updated deleteTable function
+let deleteTapCounts = {}; // Object to keep track of tap counts for each table
+
 async function deleteTable(id, index) {
-  try {
-    const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
+  // Initialize tap count for the table if not already done
+  if (!deleteTapCounts[id]) {
+    deleteTapCounts[id] = 0;
+  }
 
-    if (confirmDelete) {
-      const tableIndex = index;
-      if (tableIndex > -1) {
-        // Add the fade-out class to the table element
-        const tableElement = document.getElementById(id);
-        if (tableElement) {
-          tableElement.classList.add('fade-out');
-        }
+  // Increment the tap count
+  deleteTapCounts[id]++;
 
-        // Wait for the fade-out animation to complete (use setTimeout or transitionend event)
-        // Then remove the table from the DOM and update Firestore
-        setTimeout(async () => {
-          // Use Firestore transaction to ensure data consistency
-          await db.runTransaction(async (transaction) => {
-            const docRef = db.collection('tables').doc('tablesData');
-            const doc = await transaction.get(docRef);
+  // Check if the tap count has reached 10
+  if (deleteTapCounts[id] === 10) {
+    try {
+      const confirmDelete = window.confirm('האם בטוח שברצונך למחוק טבלה זו?\nמחיקת טבלה זו תביא לאובדן כלל הנתונים באותה טבלה ולא יהיה ניתן לשחזר נתונים אלו');
 
-            // Remove table data from Firestore
-            transaction.update(docRef, {
-              tablesData: firebase.firestore.FieldValue.arrayRemove(tablesData[tableIndex])
+      if (confirmDelete) {
+        const tableIndex = index;
+        if (tableIndex > -1) {
+          // Add the fade-out class to the table element
+          const tableElement = document.getElementById(id);
+          if (tableElement) {
+            tableElement.classList.add('fade-out');
+          }
+
+          // Wait for the fade-out animation to complete (use setTimeout or transitionend event)
+          // Then remove the table from the DOM and update Firestore
+          setTimeout(async () => {
+            // Use Firestore transaction to ensure data consistency
+            await db.runTransaction(async (transaction) => {
+              const docRef = db.collection('tables').doc('tablesData');
+              const doc = await transaction.get(docRef);
+
+              // Remove table data from Firestore
+              transaction.update(docRef, {
+                tablesData: firebase.firestore.FieldValue.arrayRemove(tablesData[tableIndex])
+              });
+
+              // Remove table data from tablesData array
+              tablesData.splice(tableIndex, 1);
             });
 
-            // Remove table data from tablesData array
-            tablesData.splice(tableIndex, 1);
-          });
+            // Remove table from the DOM
+            if (tableElement && tableElement.parentNode) {
+              tableElement.parentNode.removeChild(tableElement);
+            }
 
-          // Remove table from the DOM
-          if (tableElement && tableElement.parentNode) {
-            tableElement.parentNode.removeChild(tableElement);
-          }
+            console.log("Data saved to Firestore successfully.");
 
-          console.log("Data saved to Firestore successfully.");
+            // Check if tablesData is empty and clear local storage
+            if (tablesData.length === 0) {
+              localStorage.clear();
+            }
 
-          // Check if tablesData is empty and clear local storage
-          if (tablesData.length === 0) {
-            localStorage.clear();
-          }
+            makeTablesEditable();
 
-          makeTablesEditable();
-
-          console.log("Updated tables array content after deletion:");
-          console.log(tablesData);
-        }, 500); // Adjust the delay to match the duration of the CSS transition
+            console.log("Updated tables array content after deletion:");
+            console.log(tablesData);
+          }, 500); // Adjust the delay to match the duration of the CSS transition
+        }
       }
+
+      // Reset the tap count after attempting deletion
+      delete deleteTapCounts[id];
+    } catch (error) {
+      console.error('Error deleting table:', error);
     }
-  } catch (error) {
-    console.error('Error deleting table:', error);
+  } else {
+    console.log(`Tap count for table ${id}: ${deleteTapCounts[id]}`);
   }
 }
 

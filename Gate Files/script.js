@@ -439,7 +439,7 @@ function getNextDayAndDate(tablesData) {
 function getCurrentDateFormatted() {
   const today = new Date();
   let day = today.getDate();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const month = String(today.getMonth() + 1).padStart(1, '0'); // Pad  start is the number of characters for the month
   const year = today.getFullYear();
 
   if (day < 10) {

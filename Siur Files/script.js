@@ -52,7 +52,7 @@ const firebaseConfig = {
               </tr>
             </thead>
             <tbody>
-              <tr class="spaceUnder"><td id="hour">${cellData[0] || '02:00 - 00:00'}</td><td>${cellData[1] || ''}</td><td>${cellData[2] || ''}</td></tr>
+              <tr class="spaceUnder"><td id="hour">${cellData[0] || '02:00 - 00:01'}</td><td>${cellData[1] || ''}</td><td>${cellData[2] || ''}</td></tr>
               <tr class="spaceUnder"><td id="hour">${cellData[3] || '04:00 - 02:00'}</td><td>${cellData[4] || ''}</td><td>${cellData[5] || ''}</td></tr>
               <tr class="spaceUnder"><td id="hour">${cellData[6] || '06:00 - 04:00'}</td><td>${cellData[7] || ''}</td><td>${cellData[8] || ''}</td></tr>
             </tbody>

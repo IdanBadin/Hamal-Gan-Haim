@@ -28,7 +28,7 @@ const firebaseConfig = {
     return siurTablesData;
   }
   
-  // Updated displayTables function
+  // Display tables function
   function displayTables() {
     tablesContainer.innerHTML = siurTablesData.map((table, index) => {
       const cellData = table.cellData || []; // Use the cellData property or an empty array if not present
@@ -57,7 +57,6 @@ const firebaseConfig = {
               <tr class="spaceUnder"><td id="hour">${cellData[6] || '06:00 - 04:00'}</td><td>${cellData[7] || ''}</td><td>${cellData[8] || ''}</td></tr>
             </tbody>
           </table>
-          <div style="height: 15px; border-radius:0 0 10px 10px; background-color: #9AD0C2"></div>
         </div>`;
     }).join("<br>");
   

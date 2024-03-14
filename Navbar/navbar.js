@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <div id="bottom-navbar">
             <div class="SaveChangesButtonDiv">
                <img id="saveChangesButton" style="height: 55px" src="./Images/yes.png" alt="שמור שינויים">
-               <div id="newSaveChangesButtonDiv" style="display: none;">שמירת שינויים</div>
+               <div id="newSaveChangesButtonDiv" style="display: none;"><div>לחץ כאן</div><div>לשמירת השינויים</div></div>
             </div>
             <div class="navbar-button" id="HamalTableButtonLogoDiv">
                 <div style="margin-top: -13px;padding-top: 3px" class="highlight"></div>

@@ -190,3 +190,29 @@ table {
     transform-origin: bottom;
     transition: transform 0.5s ease-in-out; /* Adjust the duration and timing function as needed */
 }
+
+/* css code styling for the new save changes button that apears after clicking an empty table cell */
+@keyframes slideInLeft {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.SaveChangesButtonDiv.active #newSaveChangesButtonDiv {
+    display: block;
+    animation: slideInLeft 0.5s forwards;
+}
+
+#newSaveChangesButtonDiv {
+    height: 50px;
+    width: 130px;
+    font-size: 18px;
+    border-radius: 50px;
+    align-items: center;
+    justify-content: center;
+    background-color: #5fdd60;
+}
+/* ********************************************************************* */

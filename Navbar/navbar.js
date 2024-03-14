@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const navbarHtml = `
         <div id="bottom-navbar">
             <div class="SaveChangesButtonDiv">
-                <img id="saveChangesButton" style="height: 55px" src="./Images/yes.png" alt="שמור שינויים">
+               <img id="saveChangesButton" style="height: 55px" src="./Images/yes.png" alt="שמור שינויים">
+               <div id="newSaveChangesButtonDiv" style="display: none;">שמירת שינויים</div>
             </div>
             <div class="navbar-button" id="HamalTableButtonLogoDiv">
                 <div style="margin-top: -13px;padding-top: 3px" class="highlight"></div>
@@ -87,3 +88,35 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+// Javascript code for displaying the new save changes button after an empty cell has been clicked in a table
+
+document.addEventListener('click', function (e) {
+    // Check if the clicked element is a table cell that is empty or the specific button
+    if ((e.target.tagName === 'TD' && e.target.innerHTML.trim() === '') || e.target.id === 'addTableButton') {
+        const originalSaveChangesButton = document.getElementById('saveChangesButton');
+        const newSaveChangesButtonDiv = document.getElementById('newSaveChangesButtonDiv');
+
+        // Hide the original button and show the new button with slide-in effect
+        originalSaveChangesButton.style.display = 'none';
+        newSaveChangesButtonDiv.style.display = 'block'; // This will trigger the CSS animation
+        newSaveChangesButtonDiv.style.display = 'flex';
+
+        // Optionally, add 'active' class to trigger the animation if using CSS classes
+        document.querySelector('.SaveChangesButtonDiv').classList.add('active');
+
+        // Bind click event to the new text button if not already bound
+        if (!newSaveChangesButtonDiv.classList.contains('click-bound')) {
+            newSaveChangesButtonDiv.classList.add('click-bound');
+            newSaveChangesButtonDiv.addEventListener('click', async function () {
+                try {
+                    await saveToFirestore();
+                    alert('השינויים נשמרו בהצלחה!');
+                } catch (error) {
+                    console.error('Error saving changes:', error);
+                }
+            });
+        }
+    }
+});
+// ************************************************************************************************

@@ -65,6 +65,7 @@
         input[type="text"] {
             width: 100%;
             box-sizing: border-box;
+            border-radius: 12px;
             height: 30px;
             font-size: 16px;
             font-family: 'Fredoka', sans-serif;
@@ -77,7 +78,7 @@
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
         }
@@ -101,11 +102,6 @@
             -webkit-box-shadow: 0px 0px 16px -1px #000000;
             box-shadow: 0px 0px 16px -1px #000000;
             z-index: 9999;
-        }
-
-        #HamalTableButtonLogoDiv, #GateTableButtonLogoDiv {
-            background-color: transparent;
-            width: fit-content;
         }
 
         .navbar-button.active .highlight {
@@ -134,7 +130,7 @@
 <body>
     <div class="contactsPageHeader">(גן חיים) רשימת אנשי קשר</div>
     <div style="margin-top: 20px; display: flex; justify-content: center;width: 350px;height: fit-content;">
-        <input style="direction: rtl;" type="text" id="searchInput" oninput="searchContacts()" placeholder="חפש/י איש קשר...">
+        <input style="direction: rtl;padding-right: 10px;" type="text" id="searchInput" oninput="searchContacts()" placeholder="חפש/י איש קשר...">
     </div>
     <div id="noResultsMessage" style="display: none;font-size: 22px;margin-top: 10px;font-weight: bold;">אין תוצאות מתאימות</div>
     <table id="contactsTable">

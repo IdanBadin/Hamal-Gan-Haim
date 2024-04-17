@@ -51,11 +51,11 @@ function displayTables() {
             <tr class="spaceUnder"><td id="hour">${cellData[3] || '04:00 - 02:00'}</td><td>${cellData[4] || ''}</td><td>${cellData[5] || ''}</td></tr>
             <tr class="spaceUnder"><td id="hour">${cellData[6] || '06:00 - 04:00'}</td><td>${cellData[7] || ''}</td><td>${cellData[8] || ''}</td></tr>
             <tr class="spaceUnder"><td id="hour">${cellData[9] || '08:00 - 06:00'}</td><td>${cellData[10] || ''}</td><td>${cellData[11] || ''}</td></tr>
-            <tr class="spaceUnder"><td id="hour">${cellData[12] || '10:00 - 08:00'}</td><td style='background-color: red' >${cellData[13] || ''}</td><td style='background-color: red'>${cellData[14] || ''}</td></tr>
-            <tr class="spaceUnder"><td id="hour">${cellData[15] || '12:00 - 10:00'}</td><td style='background-color: red'>${cellData[16] || ''}</td><td style='background-color: red'>${cellData[17] || ''}</td></tr>
-            <tr class="spaceUnder"><td id="hour">${cellData[18] || '14:00 - 12:00'}</td><td style='background-color: red'>${cellData[19] || ''}</td><td style='background-color: red'>${cellData[20] || ''}</td></tr>
-            <tr class="spaceUnder"><td id="hour">${cellData[21] || '16:00 - 14:00'}</td><td style='background-color: red'>${cellData[22] || ''}</td><td style='background-color: red'>${cellData[23] || ''}</td></tr>
-            <tr class="spaceUnder"><td id="hour">${cellData[24] || '18:00 - 16:00'}</td><td style='background-color: red'>${cellData[25] || ''}</td><td style='background-color: red'>${cellData[26] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[12] || '10:00 - 08:00'}</td><td>${cellData[13] || ''}</td><td>${cellData[14] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[15] || '12:00 - 10:00'}</td><td>${cellData[16] || ''}</td><td>${cellData[17] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[18] || '14:00 - 12:00'}</td><td>${cellData[19] || ''}</td><td>${cellData[20] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[21] || '16:00 - 14:00'}</td><td>${cellData[22] || ''}</td><td>${cellData[23] || ''}</td></tr>
+            <tr class="spaceUnder"><td id="hour">${cellData[24] || '18:00 - 16:00'}</td><td>${cellData[25] || ''}</td><td>${cellData[26] || ''}</td></tr>
             <tr class="spaceUnder"><td id="hour">${cellData[27] || '20:00 - 18:00'}</td><td>${cellData[28] || ''}</td><td>${cellData[29] || ''}</td></tr>
             <tr class="spaceUnder"><td id="hour">${cellData[30] || '22:00 - 20:00'}</td><td>${cellData[31] || ''}</td><td>${cellData[32] || ''}</td></tr>
             <tr class="spaceUnder"><td id="hour">${cellData[33] || '00:00 - 22:00'}</td><td>${cellData[34] || ''}</td><td>${cellData[35] || ''}</td></tr>

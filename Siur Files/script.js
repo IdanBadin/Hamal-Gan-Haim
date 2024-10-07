@@ -28,7 +28,7 @@ function assignDateToId(siurTablesData) {
   return siurTablesData;
 }
 
-// Display tables function with fixed time slots from 20:00 to 08:00
+// Display tables function with fixed time slots from 00:01 to 23:00
 function displayTables() {
 tablesContainer.innerHTML = siurTablesData.map((table, index) => {
   const cellData = table.cellData || []; // Use the cellData property or an empty array if not present
@@ -40,31 +40,47 @@ tablesContainer.innerHTML = siurTablesData.map((table, index) => {
           <tr>
             <th colspan="3" id="tableHeaderElement">
               <div id="tableHeaderContainer" style="position: relative">
-                <div id="calendarIconDiv"><img style="width: 30px;height: 30px" src="./Images/calendar.png" alt="calendar"></div>
+                <div id="calendarIconDiv">
+                  <img style="width: 30px;height: 30px" src="./Images/calendar.png" alt="calendar" />
+                </div>
                 <div id="tableTitleTextDiv">${table.title}</div>
-                <div id="deleteTableBtnDiv"><img class="deleteTableBtn" src="./Images/delete.png" alt="Delete Button" onclick="deleteTable('${table.id}', ${index})"></div>
+                <div id="deleteTableBtnDiv">
+                  <img class="deleteTableBtn" src="./Images/delete.png" alt="Delete Button" onclick="deleteTable('${table.id}', ${index})" />
+                </div>
               </div>
             </th>
           </tr>
           <tr>
             <th></th>
             <th style="text-align: center; font-size: 20px">חמוש</th>
-            <th style="text-align: center; font-size: 20px">לא חמוש </th>
+            <th style="text-align: center; font-size: 20px">לא חמוש</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="spaceUnder"><td id="hour">${cellData[0] || '20:00 - 21:00'}</td><td>${cellData[1] || ''}</td><td>${cellData[2] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[3] || '21:00 - 22:00'}</td><td>${cellData[4] || ''}</td><td>${cellData[5] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[6] || '22:00 - 23:00'}</td><td>${cellData[7] || ''}</td><td>${cellData[8] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[9] || '23:00 - 00:00'}</td><td>${cellData[10] || ''}</td><td>${cellData[11] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[12] || '00:00 - 01:00'}</td><td>${cellData[13] || ''}</td><td>${cellData[14] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[15] || '01:00 - 02:00'}</td><td>${cellData[16] || ''}</td><td>${cellData[17] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[18] || '02:00 - 03:00'}</td><td>${cellData[19] || ''}</td><td>${cellData[20] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[21] || '03:00 - 04:00'}</td><td>${cellData[22] || ''}</td><td>${cellData[23] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[24] || '04:00 - 05:00'}</td><td>${cellData[25] || ''}</td><td>${cellData[26] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[27] || '05:00 - 06:00'}</td><td>${cellData[28] || ''}</td><td>${cellData[29] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[30] || '06:00 - 07:00'}</td><td>${cellData[31] || ''}</td><td>${cellData[32] || ''}</td></tr>
-          <tr class="spaceUnder"><td id="hour">${cellData[33] || '07:00 - 08:00'}</td><td>${cellData[34] || ''}</td><td>${cellData[35] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[0] || '00:01 - 01:00'}</td><td>${cellData[1] || ''}</td><td>${cellData[2] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[3] || '01:00 - 02:00'}</td><td>${cellData[4] || ''}</td><td>${cellData[5] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[6] || '02:00 - 03:00'}</td><td>${cellData[7] || ''}</td><td>${cellData[8] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[9] || '03:00 - 04:00'}</td><td>${cellData[10] || ''}</td><td>${cellData[11] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[12] || '04:00 - 05:00'}</td><td>${cellData[13] || ''}</td><td>${cellData[14] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[15] || '05:00 - 06:00'}</td><td>${cellData[16] || ''}</td><td>${cellData[17] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[18] || '06:00 - 07:00'}</td><td>${cellData[19] || ''}</td><td>${cellData[20] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[21] || '07:00 - 08:00'}</td><td>${cellData[22] || ''}</td><td>${cellData[23] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[24] || '08:00 - 09:00'}</td><td>${cellData[25] || ''}</td><td>${cellData[26] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[27] || '09:00 - 10:00'}</td><td>${cellData[28] || ''}</td><td>${cellData[29] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[30] || '10:00 - 11:00'}</td><td>${cellData[31] || ''}</td><td>${cellData[32] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[33] || '11:00 - 12:00'}</td><td>${cellData[34] || ''}</td><td>${cellData[35] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[36] || '12:00 - 13:00'}</td><td>${cellData[37] || ''}</td><td>${cellData[38] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[39] || '13:00 - 14:00'}</td><td>${cellData[40] || ''}</td><td>${cellData[41] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[42] || '14:00 - 15:00'}</td><td>${cellData[43] || ''}</td><td>${cellData[44] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[45] || '15:00 - 16:00'}</td><td>${cellData[46] || ''}</td><td>${cellData[47] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[48] || '16:00 - 17:00'}</td><td>${cellData[49] || ''}</td><td>${cellData[50] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[51] || '17:00 - 18:00'}</td><td>${cellData[52] || ''}</td><td>${cellData[53] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[54] || '18:00 - 19:00'}</td><td>${cellData[55] || ''}</td><td>${cellData[56] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[57] || '19:00 - 20:00'}</td><td>${cellData[58] || ''}</td><td>${cellData[59] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[60] || '20:00 - 21:00'}</td><td>${cellData[61] || ''}</td><td>${cellData[62] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[63] || '21:00 - 22:00'}</td><td>${cellData[64] || ''}</td><td>${cellData[65] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[66] || '22:00 - 23:00'}</td><td>${cellData[67] || ''}</td><td>${cellData[68] || ''}</td></tr>
+          <tr class="spaceUnder"><td id="hour">${cellData[69] || '23:00 - 00:00'}</td><td>${cellData[70] || ''}</td><td>${cellData[71] || ''}</td></tr>
         </tbody>
       </table>
     </div>`;
@@ -148,7 +164,7 @@ async function addTableToArray(table) {
 
 // Function to get default cell data
 function getDefaultCellData() {
-  return Array(36).fill(''); // Create an array with 36 empty strings for default cell data
+  return Array(72).fill(''); // Create an array with 72 empty strings for default cell data
 }
 
 // Updated deleteTable function

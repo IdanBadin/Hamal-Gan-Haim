@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div style="align-items: center;justify-content: center;display: flex">
                     <img style="height: 35px" id="GateLogo" src="./Images/SiurLogo.png" alt="שער">
                 </div>
-                <div style="text-align: center;margin-bottom: -4px">סיור</div>
+                <div style="text-align: center;margin-bottom: -4px">משמרות כיפור</div>
                 </a>
             </div>
             <div class="navbar-button" id="ContactsTableButtonLogoDiv">

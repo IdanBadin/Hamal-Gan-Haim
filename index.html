@@ -1,31 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
-  <script src="./Navbar/navbar.js" defer></script>
-  <link rel="stylesheet" href="./Hamal Files/styles.css">
-  <title>Hamal Gan Haim</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamal Gan Haim - Premium</title>
+
+    <!-- Design System -->
+    <link rel="stylesheet" href="./assets/styles/global.css">
+    <link rel="stylesheet" href="./assets/styles/navbar.css">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- Core Architecture -->
+    <script src="./assets/scripts/DataManager.js" defer></script>
+    <script src="./assets/scripts/UIManager.js" defer></script>
+    <script src="./assets/scripts/TableManager.js" defer></script>
+
+    <!-- Page Script -->
+    <script src="./Hamal Files/script.js" defer></script>
+    <script src="./Navbar/navbar.js" defer></script>
 </head>
+
 <body>
-  <!-- <div class="web-container"> -->
-    <div class="pageHeader">שיבוצים חמ״ל (גן חיים)</div>
-    <div id="tablesContainer">
-
-    </div>
-    <div id="addTableButtonContainer" style="display: none;">
-      <img id="addTableButton" src="./Images/plus.png" alt="Add Button">
+    <div class="page-header">
+        <h1 class="page-title">שיבוצים חמ״ל (גן חיים)</h1>
     </div>
 
-  <!-- </div> -->
+    <div class="container">
+        <div id="hamalTablesContainer">
+            <!-- Tables injected by TableManager -->
+        </div>
+    </div>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <!-- Floating Action Button -->
+    <div class="fab" id="addTableBtn">
+        <img src="./Images/plus.png" alt="Add">
+    </div>
 
-  <script src="./Hamal Files/script.js"></script>
+    <!-- Modals and Toasts container handled by UIManager -->
 </body>
+
 </html>

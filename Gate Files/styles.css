@@ -1,220 +1,131 @@
-body {
-    background-color: transparent;
-    height: fit-content;
-    width: 100%;
-    min-height: 100vh;
-    font-family: Open Sans Hebrew,sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-x: hidden;
-    /* justify-content: center; */
-}
-  
-/* .web-container {
-    background-color: transparent;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-x: hidden;
-} */
-  
-.pageHeader {
-    font-family: 'Fredoka', sans-serif;
-    background-color: #A9A9A9;
-    font-size: 30px;
-    width: 97%;
-    margin-bottom: 5px;
-    height: 50px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    border-radius: 10px;
-    margin-top: 10px;
-}
+/* Gate Page Specific Styles */
 
 #tablesContainer {
-    width: 90%;
-    margin-top: 15px;
-}
-  
-.tableBlock {
-    background-color: whitesmoke;
-    border-radius: 10px 10px 0 0;
-    -webkit-box-shadow: 0px 0px 16px -1px #000000;
-    box-shadow: 0px 0px 16px -1px #000000;
-}
-  
-#tableHeaderContainer {
-    height: 40px;
+    width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    padding-bottom: 100px;
+}
+
+.tableBlock {
+    background-color: var(--surface-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#tableHeaderContainer {
+    background: linear-gradient(to right, #79AC78, #5F8D5E);
+    /* Green for Gate */
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
-  
-#tableHeaderElement {
-    width: 100%;
-    background-color: #79AC78;
-    border-radius: 10px 10px 0 0;
-    font-weight: 400px;
-    padding: 10px 5px 10px 5px;
+
+#tableTitleTextDiv {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
 }
-  
+
 .deleteTableBtn {
-    height: 30px;
-    width: 30px;
-    left: 0;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+    /* Make white */
+    opacity: 0.7;
+    transition: opacity var(--transition-fast);
 }
-  
-.spaceUnder>td {
-    padding-bottom: 10px;
-    padding-top: 10px;
-    text-align: center;
+
+.deleteTableBtn:hover {
+    opacity: 1;
 }
-  
-td {
-    border: 1px solid black;
-    min-width: 100px;
-    max-width: 139px;
-    height: fit-content;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-  
+
 table {
-    font-family: 'Fredoka', sans-serif;
+    width: 100%;
     border-collapse: collapse;
 }
-  
-#hour {
-    text-align: right;
-}
-  
-#addTableButtonContainer {
-    margin-top: 25px;
-    margin-bottom: 105px;
-    width: fit-content;
-}
-  
-#addTableButton {
-    height: 45px;
-    width: 45px;
-}
-  
-#calendarIconDiv, #tableTitleTextDiv {
-    position: absolute;
-    right: 0;
-}
-  
-#deleteTableBtnDiv {
-    position: absolute;
-    left: 0;
-    margin-left: 10px;
-}
-  
-#calendarIconDiv {
-    margin-right: 5px;
-}
-  
-#tableTitleTextDiv {
-    margin-right: 50px;
-    font-size: 20px;
+
+td,
+th {
+    padding: var(--spacing-sm);
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
 }
 
-#bottom-navbar {
-    background-color: whitesmoke;
-    width: 80%;
-    height: 60px;
+td {
+    height: 40px;
+}
+
+/* Hour Column */
+td:first-child {
+    background-color: var(--background-color);
+    font-weight: 600;
+    color: var(--text-secondary);
+    width: 120px;
+}
+
+/* Editable Cells */
+td[contenteditable="true"] {
+    background-color: #fff;
+    transition: background-color var(--transition-fast);
+}
+
+td[contenteditable="true"]:focus {
+    background-color: #e3f2fd;
+    outline: 2px solid #79AC78;
+    outline-offset: -2px;
+}
+
+/* Floating Action Button for Adding Table */
+.floating-action-container {
     position: fixed;
-    bottom: 18px;
+    bottom: 100px;
+    left: 20px;
+    z-index: 999;
+}
+
+.btn-floating {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #79AC78;
+    box-shadow: var(--shadow-lg);
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    border-radius: 10px;
-    -webkit-box-shadow: 0px 0px 16px -1px #000000;
-    box-shadow: 0px 0px 16px -1px #000000;
-    z-index: 9999;
+    justify-content: center;
+    transition: transform var(--transition-fast);
 }
 
-#HamalTableButtonLogoDiv, #GateTableButtonLogoDiv {
-    background-color: transparent;
-    width: fit-content;
-    /* height: 50px;
-    border: 1px solid black;
-    border-radius: 10px;
-    -webkit-box-shadow: 0px 0px 16px -1px #000000;
-    box-shadow: 0px 0px 16px -1px #000000; */
+.btn-floating:hover {
+    transform: scale(1.1);
+    background-color: #5F8D5E;
 }
 
-/* Add this style for the active state */
-.navbar-button.active .highlight {
-    width: 100%;
-    height: 4px;
-    border-radius: 10px;
-    background-color: #79AC78;
-}
-
-.navbar-button {
-    position: relative;
-}
-
-.highlight {
-    position: absolute;
-    border-radius: 10px;
-    /* bottom: 0; */
-    left: 0;
-    width: 0;
-    height: 4px;
-    background-color: #79AC78;
-    transition: width 0.3s ease 0.5s; /* Add a small delay for the initial width */
-}
-
-.SaveChangesButtonDiv {
-    position: fixed;
-    right: 20px;
-    margin-bottom: 180px;
-    width: fit-content;
-    height: fit-content;
-    background-color: transparent;
-    display: flex;
-    justify-content: flex-end;
+.btn-floating img {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
 }
 
 .fade-out {
-    transform: scaleX(0);
-    transform-origin: bottom;
-    transition: transform 0.5s ease-in-out; /* Adjust the duration and timing function as needed */
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.5s ease;
 }
-
-/* css code styling for the new save changes button that apears after clicking an empty table cell */
-@keyframes slideInLeft {
-    from {
-        transform: translateX(100%);
-    }
-    to {
-        transform: translateX(0);
-    }
-}
-
-.SaveChangesButtonDiv.active #newSaveChangesButtonDiv {
-    display: block;
-    animation: slideInLeft 0.5s forwards;
-}
-
-#newSaveChangesButtonDiv {
-    height: 60px;
-    width: fit-content;
-    min-width: 160px;
-    font-size: 18px;
-    border-radius: 50px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #5fdd60;
-}
-/* ********************************************************************* */

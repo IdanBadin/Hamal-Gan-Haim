@@ -1,0 +1,90 @@
+/* Contacts Page Specific Styles */
+
+.contacts-container {
+    padding-bottom: 100px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin: var(--spacing-lg) 0;
+}
+
+#searchInput {
+    width: 100%;
+    max-width: 400px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-base);
+    font-family: var(--font-family-base);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+    outline: none;
+    direction: rtl;
+}
+
+#searchInput:focus {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+}
+
+#noResultsMessage {
+    text-align: center;
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin-top: var(--spacing-lg);
+    display: none;
+}
+
+/* Contacts Table */
+.contacts-table-wrapper {
+    background-color: var(--surface-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    margin-bottom: var(--spacing-lg);
+}
+
+#contactsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#contactsTable th {
+    background-color: var(--background-color);
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: var(--spacing-md);
+    text-align: right;
+    border-bottom: 2px solid var(--border-color);
+}
+
+#contactsTable td {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+#contactsTable tr:last-child td {
+    border-bottom: none;
+}
+
+#contactsTable tr:hover {
+    background-color: var(--background-color);
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-bottom: 100px;
+}
+
+.loading-indicator {
+    padding: var(--spacing-lg);
+    text-align: center;
+    color: var(--text-secondary);
+    font-weight: 500;
+}

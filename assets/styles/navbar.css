@@ -1,0 +1,107 @@
+/* Premium Glass Navbar */
+.glass-navbar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    height: 70px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+    padding: 0 var(--spacing-sm);
+}
+
+.navbar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all var(--transition-medium);
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    position: relative;
+    min-width: 64px;
+    /* Ensure minimum width */
+    gap: 4px;
+    /* Consistent gap between icon and text */
+}
+
+.navbar-item .icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: transform var(--transition-medium);
+}
+
+.navbar-item span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.8;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.navbar-item.active {
+    color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-item.active .icon {
+    transform: translateY(-2px);
+}
+
+.navbar-item:hover {
+    color: var(--text-primary);
+}
+
+.btn-save-changes:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-save-changes img {
+    width: 28px;
+    height: 28px;
+}
+
+.save-label {
+    background-color: var(--surface-color);
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    #bottom-navbar {
+        width: 95%;
+        bottom: 10px;
+    }
+}
